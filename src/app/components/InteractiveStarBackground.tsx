@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Star {
   x: number
@@ -192,14 +192,17 @@ export default function InteractiveStarBackground({ variant = 'default' }: Inter
     }
   }, [variant])
 
-  const particles = useMemo(() => {
-    if (typeof window === 'undefined') return []
-    return [...Array(15)].map(() => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 3}s`,
-      duration: `${2 + Math.random() * 2}s`
-    }))
+  const [particles, setParticles] = useState<{ left: string; top: string; delay: string; duration: string }[]>([])
+
+  useEffect(() => {
+    setParticles(
+      [...Array(15)].map(() => ({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 3}s`,
+        duration: `${2 + Math.random() * 2}s`
+      }))
+    )
   }, [])
 
   return (

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: 'Uday Kumar Portfolio',
     images: [
       {
-        url: '/assets/images/profilePic.jpg',
+        url: '/images/profilePic.jpg',
         width: 800,
         height: 600,
         alt: 'Uday Kumar Guduguntla',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Uday Kumar Guduguntla - Full Stack Developer & AI Innovator',
     description: 'Passionate Full Stack Developer specializing in AI/ML, Computer Vision, and Accessibility Technology',
-    images: ['/assets/images/profilePic.jpg'],
+    images: ['/images/profilePic.jpg'],
   },
   robots: {
     index: true,
@@ -59,15 +59,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
-        <link rel="alternate icon" href="/assets/images/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+        <link rel="alternate icon" href="/images/favicon-g.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
       </head>
       <body className={`${inter.className}`}>
-        <main className="min-h-screen relative">
+        <main className="min-h-screen relative overflow-x-hidden">
           {children}
         </main>
         <Footer />

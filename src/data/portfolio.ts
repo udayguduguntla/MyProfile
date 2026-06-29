@@ -9,7 +9,7 @@ export const portfolioData = {
     phone: "+91 6302111386",
     location: "Hyderabad, India",
     avatar: "/images/profile.jpg",
-    resume: "/documents/udayNewUAE.pdf"
+    resume: "#"
   },
 
   social: {
