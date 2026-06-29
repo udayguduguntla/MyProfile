@@ -27,7 +27,7 @@ const navigationItems = [
   },
   {
     id: 'achievements',
-    label: 'Wins',
+    label: 'Credentials',
     href: '/achievements',
     Icon: Award,
   },

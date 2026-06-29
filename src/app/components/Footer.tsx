@@ -87,21 +87,21 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <i className="fas fa-map-marker-alt w-5 h-5 text-purple-300 mt-1 flex-shrink-0"></i>
                 <p className="text-white/70">
-                  {portfolioData.contact.location}
+                  {portfolioData.personal.location}
                 </p>
               </div>
               <div className="flex items-center space-x-3">
                 <i className="fas fa-envelope w-5 h-5 text-purple-300 flex-shrink-0"></i>
                 <a 
-                  href={`mailto:${portfolioData.contact.email}`}
+                  href={`mailto:${portfolioData.personal.email}`}
                   className="text-white/70 hover:text-white transition-colors duration-200"
                 >
-                  {portfolioData.contact.email}
+                  {portfolioData.personal.email}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <i className="fas fa-phone w-5 h-5 text-purple-300 flex-shrink-0"></i>
-                <p className="text-white/70">{portfolioData.contact.availability}</p>
+                <p className="text-white/70">{portfolioData.personal.phone}</p>
               </div>
             </div>
 

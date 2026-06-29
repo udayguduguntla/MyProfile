@@ -4,218 +4,93 @@ import { useState } from 'react'
 import { portfolioData } from '@/data/portfolio'
 import ModernNavigation from '../components/ModernNavigation'
 import InteractiveStarBackground from '../components/InteractiveStarBackground'
+import { Github, Linkedin, Code2, Trophy, Mail, MapPin, Phone, Send } from 'lucide-react'
+
+const socialLinks = [
+  { label: 'GitHub', Icon: Github, href: portfolioData.social.github, color: 'hover:bg-[#333]' },
+  { label: 'LinkedIn', Icon: Linkedin, href: portfolioData.social.linkedin, color: 'hover:bg-[#0A66C2]' },
+  { label: 'LeetCode', Icon: Code2, href: portfolioData.social.leetcode, color: 'hover:bg-[#FFA116]' },
+  { label: 'CodeChef', Icon: Trophy, href: portfolioData.social.codechef, color: 'hover:bg-[#6B4226]' },
+]
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log('Form submitted:', formData)
-    // You can integrate with email services like EmailJS, Formspree, etc.
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    console.log('Contact form:', formData)
+    setSubmitted(true)
   }
 
   return (
     <div className="min-h-screen relative pt-24 pb-16">
       <InteractiveStarBackground variant="contact" />
       <ModernNavigation />
-      
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-white mb-6">
-              Get In Touch
-            </h1>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
-              Have a project in mind? I'd love to hear about it. Let's discuss how we can work together 
-              to bring your ideas to life.
-            </p>
-          </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
-            {/* Contact Info */}
-            <div className="space-y-8 sm:space-y-12">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">
-                  Let's Connect
-                </h2>
-                <p className="text-base sm:text-lg text-white/80 mb-6 sm:mb-8">
-                  {portfolioData.contact.availability}
-                </p>
-              </div>
+      <main className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-16 text-center">
+          <h1 className="text-4xl font-bold text-white sm:text-5xl">Get In Touch</h1>
+          <p className="mt-4 text-lg text-white/70">{portfolioData.contact.availability}</p>
+        </div>
 
-              {/* Contact Methods */}
-              <div className="space-y-6 sm:space-y-8">
-                <div className="flex items-center space-x-4 sm:space-x-6 p-4 sm:p-6 glass-purple rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-purple-600 to-violet-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
-                    <i className="fas fa-envelope text-lg sm:text-2xl"></i>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 sm:mb-2">Email</h3>
-                    <a 
-                      href={`mailto:${portfolioData.contact.email}`}
-                      className="text-purple-300 hover:text-purple-200 transition-colors duration-200 text-sm sm:text-lg break-all"
-                    >
-                      {portfolioData.contact.email}
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 sm:space-x-6 p-4 sm:p-6 glass-purple rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-violet-600 to-pink-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
-                    <i className="fas fa-map-marker-alt text-lg sm:text-2xl"></i>
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 sm:mb-2">Location</h3>
-                    <p className="text-white/80 text-sm sm:text-lg">{portfolioData.contact.location}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 sm:space-x-6 p-4 sm:p-6 glass-purple rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-br from-green-600 to-teal-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
-                    <i className="fas fa-clock text-lg sm:text-2xl"></i>
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 sm:mb-2">Response Time</h3>
-                    <p className="text-white/80 text-sm sm:text-lg">Usually within 24 hours</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Links */}
-              <div>
-                <h3 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6">Connect With Me</h3>
-                <div className="flex space-x-3 sm:space-x-6">
-                  <a
-                    href={portfolioData.social.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white/30 transition-colors duration-200 group backdrop-blur-sm border border-white/20"
-                  >
-                    <i className="fab fa-github text-lg sm:text-2xl group-hover:scale-110 transition-transform duration-200"></i>
-                  </a>
-                  <a
-                    href={portfolioData.social.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white/30 transition-colors duration-200 group backdrop-blur-sm border border-white/20"
-                  >
-                    <i className="fab fa-linkedin text-lg sm:text-2xl group-hover:scale-110 transition-transform duration-200"></i>
-                  </a>
-                  <a
-                    href={portfolioData.social.leetcode}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white/30 transition-colors duration-200 group backdrop-blur-sm border border-white/20"
-                  >
-                    <i className="fas fa-code text-lg sm:text-2xl group-hover:scale-110 transition-transform duration-200"></i>
-                  </a>
-                  <a
-                    href={portfolioData.social.codechef}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-xl flex items-center justify-center text-white hover:bg-white/30 transition-colors duration-200 group backdrop-blur-sm border border-white/20"
-                  >
-                    <i className="fas fa-trophy text-lg sm:text-2xl group-hover:scale-110 transition-transform duration-200"></i>
-                  </a>
-                </div>
-              </div>
+        <div className="grid gap-8 lg:grid-cols-5">
+          <div className="space-y-6 lg:col-span-2">
+            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+              <Mail className="h-5 w-5 text-purple-300" />
+              <p className="mt-3 text-sm font-medium text-white">Email</p>
+              <a href={`mailto:${portfolioData.contact.email}`} className="mt-1 block text-sm text-purple-200 transition hover:text-purple-100">
+                {portfolioData.contact.email}
+              </a>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+              <MapPin className="h-5 w-5 text-purple-300" />
+              <p className="mt-3 text-sm font-medium text-white">Location</p>
+              <p className="mt-1 text-sm text-white/60">{portfolioData.contact.location}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+              <Phone className="h-5 w-5 text-purple-300" />
+              <p className="mt-3 text-sm font-medium text-white">Phone</p>
+              <p className="mt-1 text-sm text-white/60">{portfolioData.contact.phone}</p>
             </div>
 
-            {/* Contact Form */}
-            <div className="glass-enhanced interactive-glow rounded-2xl shadow-xl p-8">
-              <h3 className="text-2xl font-bold text-white mb-8">Send Me a Message</h3>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-white mb-3">
-                      Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-white placeholder-white/60 backdrop-blur-sm"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-white mb-3">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-white placeholder-white/60 backdrop-blur-sm"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+              <p className="mb-4 text-sm font-semibold text-white">Social</p>
+              <div className="flex flex-wrap gap-3">
+                {socialLinks.map(({ label, Icon, href, color }) => (
+                  <a key={label} href={href} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 rounded-lg border border-white/12 bg-white/10 px-4 py-2.5 text-sm font-medium text-white transition ${color}`}>
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-white mb-3">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    required
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-white placeholder-white/60 backdrop-blur-sm"
-                    placeholder="What's this about?"
-                  />
+          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl lg:col-span-3">
+            <h2 className="mb-6 text-lg font-bold text-white">Send a Message</h2>
+            {submitted ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Mail className="h-12 w-12 text-emerald-400" />
+                <p className="mt-4 text-lg font-semibold text-white">Message Sent!</p>
+                <p className="mt-2 text-sm text-white/60">Thank you. I&apos;ll get back to you soon.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <input type="text" name="name" placeholder="Your Name" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/50 backdrop-blur-sm transition focus:border-purple-500 focus:outline-none" />
+                  <input type="email" name="email" placeholder="Your Email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/50 backdrop-blur-sm transition focus:border-purple-500 focus:outline-none" />
                 </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-white mb-3">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={6}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none text-white placeholder-white/60 backdrop-blur-sm"
-                    placeholder="Tell me about your project or idea..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-xl hover:from-purple-700 hover:to-violet-700 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
+                <textarea name="message" placeholder="Your Message" rows={5} required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/50 backdrop-blur-sm transition focus:border-purple-500 focus:outline-none resize-none" />
+                <button type="submit" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-purple-950 transition hover:bg-white/90">
+                  <Send className="h-4 w-4" />
                   Send Message
-                  <i className="fas fa-paper-plane ml-3"></i>
                 </button>
               </form>
-            </div>
+            )}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
