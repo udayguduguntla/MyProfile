@@ -127,6 +127,17 @@ body::before {
   opacity: 0.5;
 }
 
+.hide-cursor {
+  cursor: none;
+}
+
+.hide-cursor a,
+.hide-cursor button,
+.hide-cursor input,
+.hide-cursor textarea {
+  cursor: none;
+}
+
 .glass-purple {
   background: rgba(139, 92, 246, 0.1);
   backdrop-filter: blur(20px);

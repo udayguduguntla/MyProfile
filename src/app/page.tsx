@@ -1,15 +1,21 @@
 'use client'
 
 import HeroSection from './components/HeroSection'
-import ModernNavigation from './components/ModernNavigation'
+import AboutSection from './components/AboutSection'
+import AchievementsSection from './components/AchievementsSection'
+import ProjectsSection from './components/ProjectsSection'
+import ContactSection from './components/ContactSection'
 import InteractiveStarBackground from './components/InteractiveStarBackground'
 
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       <InteractiveStarBackground variant="default" />
-      <ModernNavigation />
       <HeroSection />
+      <ProjectsSection />
+      <AboutSection />
+      <AchievementsSection />
+      <ContactSection />
     </div>
   )
 }

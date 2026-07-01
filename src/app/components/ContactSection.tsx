@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { portfolioData } from '@/data/portfolio'
-import ModernNavigation from '../components/ModernNavigation'
-import InteractiveStarBackground from '../components/InteractiveStarBackground'
 import { Github, Linkedin, Code2, Trophy, Mail, MapPin, Phone, Send, Sparkles } from 'lucide-react'
 
 const socialLinks = [
@@ -24,7 +22,7 @@ const fadeVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 }
 
-export default function ContactPage() {
+export default function ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
 
@@ -34,16 +32,14 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen relative pt-20 pb-12">
-      <InteractiveStarBackground variant="contact" />
-      <ModernNavigation />
-
-      <main className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 flex flex-col min-h-[calc(100vh-8rem)]">
+    <section id="contact" className="relative z-10 py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
-          animate="show"
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
           variants={containerVariants}
-          className="flex-1 flex flex-col lg:flex-row gap-8 items-stretch"
+          className="flex flex-col lg:flex-row gap-8 items-stretch"
         >
           {/* Left Panel - Contact Info */}
           <motion.div variants={containerVariants} className="lg:w-80 xl:w-96 flex flex-col gap-5 shrink-0">
@@ -52,7 +48,7 @@ export default function ContactPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.75)]" />
                 Available for opportunities
               </div>
-              <h1 className="text-3xl font-bold text-white sm:text-4xl">Let&apos;s talk</h1>
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">Let&apos;s talk</h2>
               <p className="mt-2 text-sm text-white/50 leading-relaxed">
                 Have a project, idea, or just want to say hi? Fill in the form or reach out directly.
               </p>
@@ -192,7 +188,7 @@ export default function ContactPage() {
             </div>
           </motion.div>
         </motion.div>
-      </main>
-    </div>
+      </div>
+    </section>
   )
 }

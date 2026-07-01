@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Footer from './components/Footer'
-import dynamic from 'next/dynamic'
+import SmoothScroll from './components/SmoothScroll'
+import CustomCursor from './components/CustomCursor'
+import ScrollProgress from './components/ScrollProgress'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -64,11 +66,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
-      <body className={`${inter.className}`}>
-        <main className="min-h-screen relative overflow-x-hidden">
-          {children}
-        </main>
-        <Footer />
+      <body className={`${inter.className} hide-cursor`}>
+        <SmoothScroll>
+          <CustomCursor />
+          <ScrollProgress />
+          <main className="min-h-screen relative overflow-x-hidden">
+            {children}
+          </main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   )
