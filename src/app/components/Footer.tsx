@@ -1,5 +1,5 @@
 import Link from 'next/link'
-// Using Font Awesome icons instead
+import { Github, Linkedin, Code2, Trophy, MapPin, Mail, Phone, Download } from 'lucide-react'
 import { portfolioData } from '@/data/portfolio'
 
 export default function Footer() {
@@ -27,7 +27,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
               >
-                <i className="fab fa-github text-lg"></i>
+                <Github className="w-5 h-5" />
               </a>
               <a 
                 href={portfolioData.social.linkedin} 
@@ -35,7 +35,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
               >
-                <i className="fab fa-linkedin text-lg"></i>
+                <Linkedin className="w-5 h-5" />
               </a>
               <a 
                 href={portfolioData.social.leetcode} 
@@ -43,7 +43,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
               >
-                <i className="fas fa-code text-lg"></i>
+                <Code2 className="w-5 h-5" />
               </a>
               <a 
                 href={portfolioData.social.codechef} 
@@ -51,7 +51,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
               >
-                <i className="fas fa-trophy text-lg"></i>
+                <Trophy className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -85,13 +85,13 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-6">Get In Touch</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <i className="fas fa-map-marker-alt w-5 h-5 text-purple-300 mt-1 flex-shrink-0"></i>
+                <MapPin className="w-5 h-5 text-purple-300 mt-1 flex-shrink-0" />
                 <p className="text-white/70">
                   {portfolioData.personal.location}
                 </p>
               </div>
               <div className="flex items-center space-x-3">
-                <i className="fas fa-envelope w-5 h-5 text-purple-300 flex-shrink-0"></i>
+                <Mail className="w-5 h-5 text-purple-300 flex-shrink-0" />
                 <a 
                   href={`mailto:${portfolioData.personal.email}`}
                   className="text-white/70 hover:text-white transition-colors duration-200"
@@ -100,7 +100,7 @@ export default function Footer() {
                 </a>
               </div>
               <div className="flex items-center space-x-3">
-                <i className="fas fa-phone w-5 h-5 text-purple-300 flex-shrink-0"></i>
+                <Phone className="w-5 h-5 text-purple-300 flex-shrink-0" />
                 <p className="text-white/70">{portfolioData.personal.phone}</p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function Footer() {
                 target="_blank"
                 className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 px-6 py-3 rounded-lg transition-all duration-200 font-medium"
               >
-                <i className="fas fa-download"></i>
+                <Download className="w-4 h-4" />
                 <span>Download Resume</span>
               </Link>
             </div>

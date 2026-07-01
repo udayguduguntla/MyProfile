@@ -63,8 +63,6 @@ export default function RootLayout({
         <link rel="alternate icon" href="/images/favicon-g.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
       </head>
       <body className={`${inter.className}`}>
         <main className="min-h-screen relative overflow-x-hidden">

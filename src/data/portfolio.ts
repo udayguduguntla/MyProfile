@@ -193,14 +193,14 @@ export const portfolioData = {
     {
       degree: "Master of Computer Applications (MCA)",
       institution: "Narayana Engineering College",
-      period: "2023 - Present",
+      period: "2023 - 2025",
       description: "Currently pursuing with CGPA of 8.8, focusing on AI/ML and advanced software development.",
-      cgpa: "8.8",
+      cgpa: "9.0",
       status: "current"
     },
     {
       degree: "Bachelor of Science (B.Sc)",
-      institution: "Previous Institution",
+      institution: "Vikrama Simhapuri University",
       period: "2020 - 2023",
       description: "Graduated with CGPA of 9.2, building strong foundation in computer science fundamentals.",
       cgpa: "9.2",
@@ -219,17 +219,17 @@ export const portfolioData = {
     {
       title: "NLP Developer & Python Engineer",
       company: "Worktual Innovations",
-      period: "May 2025 - Present",
+      period: "Oct 2025 - Present",
       description: "Building multi-agent AI systems and semantic layers for intelligent agent orchestration. Developing production-grade RAG pipelines and MCP server implementations.",
       technologies: ["Python", "FastAPI", "LangChain", "Neo4j", "PostgreSQL", "OpenAI API"],
       current: true
     },
     {
-      title: "Full Stack Developer",
-      company: "Freelance",
-      period: "2023 - May 2025",
-      description: "Developed web applications using modern technologies including React, Node.js, and various databases.",
-      technologies: ["React", "Node.js", "MongoDB", "Express.js", "Python"]
+      title: "Technical Developer",
+      company: "ZenX",
+      period: "Jul 2025 - Oct 2025",
+      description: "Researching on Web3 technologies and the shift from centralized to decentralized systems. Explored blockchain architecture, decentralized applications (DApps), tokenization, and cryptocurrency ecosystems while gaining a strong understanding of how decentralized networks operate. Also developed foundational knowledge of cryptocurrency and stock markets through continuous research and analysis of emerging financial technologies.",
+      technologies: ["Web3", "Blockchain", "DApps", "Cryptocurrency", "Tokenization"]
     }
   ]
 };
