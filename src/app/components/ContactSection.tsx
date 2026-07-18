@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { portfolioData } from '@/data/portfolio'
 import { Github, Linkedin, Code2, Trophy, Mail, MapPin, Phone, Send, Sparkles } from 'lucide-react'
 

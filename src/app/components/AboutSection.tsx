@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { Calendar } from 'lucide-react'
 import { portfolioData } from '@/data/portfolio'
 
@@ -18,7 +18,7 @@ export default function AboutSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ type: 'spring', stiffness: 180, damping: 22 }}
           className="mb-16 text-center"
         >
           <h2 className="text-4xl font-bold text-white sm:text-5xl">About Me</h2>
@@ -35,10 +35,11 @@ export default function AboutSection() {
               return (
                 <motion.button
                   key={i}
+                  layout
                   initial={{ opacity: 0, x: -12 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: i * 0.08 }}
+                  transition={{ type: 'spring', stiffness: 250, damping: 22, delay: i * 0.06 }}
                   onClick={() => setActiveIndex(i)}
                   className={`shrink-0 w-40 lg:w-full text-left rounded-xl border transition-all duration-200 ${
                     isActive

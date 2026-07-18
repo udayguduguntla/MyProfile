@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
-import CustomCursor from './components/CustomCursor'
 import ScrollProgress from './components/ScrollProgress'
 
 const inter = Inter({ 
@@ -13,14 +11,14 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Uday Kumar Guduguntla - Full Stack Developer & AI Innovator',
-  description: 'Passionate Full Stack Developer specializing in AI/ML, Computer Vision, and Accessibility Technology',
-  keywords: 'Full Stack Developer, AI, Machine Learning, Computer Vision, Accessibility Technology, React, Python, Flask',
+  title: 'Uday Kumar Guduguntla | AI Engineer',
+  description: 'Chat-first AI portfolio for Uday Kumar Guduguntla, NLP Developer and Python Engineer.',
+  keywords: 'AI Engineer, NLP Developer, Python Engineer, RAG, Multi-Agent Systems, Next.js, FastAPI',
   authors: [{ name: 'Uday Kumar Guduguntla' }],
   creator: 'Uday Kumar Guduguntla',
   openGraph: {
-    title: 'Uday Kumar Guduguntla - Full Stack Developer & AI Innovator',
-    description: 'Passionate Full Stack Developer specializing in AI/ML, Computer Vision, and Accessibility Technology',
+    title: 'Uday Kumar Guduguntla | AI Engineer',
+    description: 'Chat-first AI portfolio for Uday Kumar Guduguntla, NLP Developer and Python Engineer.',
     url: 'https://udayguduguntla.com',
     siteName: 'Uday Kumar Portfolio',
     images: [
@@ -36,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Uday Kumar Guduguntla - Full Stack Developer & AI Innovator',
-    description: 'Passionate Full Stack Developer specializing in AI/ML, Computer Vision, and Accessibility Technology',
+    title: 'Uday Kumar Guduguntla | AI Engineer',
+    description: 'Chat-first AI portfolio for Uday Kumar Guduguntla, NLP Developer and Python Engineer.',
     images: ['/images/profilePic.jpg'],
   },
   robots: {
@@ -66,14 +64,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
-      <body className={`${inter.className} hide-cursor`}>
+      <body className={inter.className}>
         <SmoothScroll>
-          <CustomCursor />
           <ScrollProgress />
           <main className="min-h-screen relative overflow-x-hidden">
             {children}
           </main>
-          <Footer />
         </SmoothScroll>
       </body>
     </html>

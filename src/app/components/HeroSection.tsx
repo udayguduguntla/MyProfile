@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ArrowRight, Github, Linkedin, Code2, Mail, Activity, Cpu, Database, Orbit, Boxes } from 'lucide-react'
 import { portfolioData } from '@/data/portfolio'
 import AnimatedCounter from './AnimatedCounter'
@@ -24,19 +24,24 @@ const runningProjects = [
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.06 } },
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: 'spring', stiffness: 200, damping: 25 } as const,
+  },
 }
 
 export default function HeroSection() {
   const [imgError, setImgError] = useState(false)
 
   return (
-    <section className="relative min-h-screen pt-8 sm:pt-12 flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8">
+    <section className="relative z-10 min-h-screen pt-8 sm:pt-12 flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8">
       <motion.div
         initial="hidden"
         animate="show"
@@ -47,7 +52,7 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.05 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.05 }}
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium text-purple-100 backdrop-blur-xl"
           >
             <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(110,231,183,0.75)]" />
@@ -56,7 +61,7 @@ export default function HeroSection() {
           <motion.h1
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.1 }}
+            transition={{ type: 'spring', stiffness: 180, damping: 22, delay: 0.1 }}
             className="mt-6 text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-7xl"
           >
             {portfolioData.personal.name}
@@ -64,7 +69,7 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.15 }}
             className="mt-3 text-base text-white/50 max-w-xl mx-auto"
           >
             {portfolioData.personal.tagline}
@@ -147,9 +152,13 @@ export default function HeroSection() {
                 {dashboardStats.map((stat, i) => (
                   <motion.div
                     key={stat.label}
+                    layout
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.3 + i * 0.06 }}
+                    transition={{
+                      type: 'spring', stiffness: 200, damping: 22,
+                      delay: 0.3 + i * 0.06,
+                    }}
                     className="rounded-xl border border-white/10 bg-white/[0.06] p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-lg"
                   >
                     <div className="flex items-center gap-2 mb-0.5">
@@ -164,7 +173,7 @@ export default function HeroSection() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.55 }}
+                transition={{ type: 'spring', stiffness: 150, damping: 20, delay: 0.55 }}
                 className="mt-5"
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -175,9 +184,13 @@ export default function HeroSection() {
                   {runningProjects.map((project, i) => (
                     <motion.div
                       key={project.name}
+                      layout
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.25, delay: 0.65 + i * 0.06 }}
+                      transition={{
+                        type: 'spring', stiffness: 250, damping: 22,
+                        delay: 0.65 + i * 0.06,
+                      }}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.06] px-3.5 py-2.5"
                     >
                       <span className="text-xs text-white/80">{project.name}</span>

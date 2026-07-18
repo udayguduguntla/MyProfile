@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { ExternalLink, Github, X, ChevronRight } from 'lucide-react'
 import { portfolioData } from '@/data/portfolio'
 
@@ -18,7 +18,7 @@ export default function ProjectsSection() {
   const remainingCount = projects.length - 1 - 3
 
   return (
-    <section id="projects" className="relative py-20 sm:py-28">
+    <section id="projects" className="relative z-10 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -157,19 +157,20 @@ export default function ProjectsSection() {
 
 function AllProjectsModal({ projects, onSelect, onClose }: { projects: Project[]; onSelect: (p: Project) => void; onClose: () => void }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.2 }}
-        className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-900/95 p-6 shadow-2xl backdrop-blur-xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          className="relative w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-2xl border border-white/20 bg-gray-900/95 p-6 shadow-2xl backdrop-blur-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
@@ -205,19 +206,20 @@ function AllProjectsModal({ projects, onSelect, onClose }: { projects: Project[]
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.2 }}
-        className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/20 bg-gray-900 shadow-2xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.15 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/20 bg-gray-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-52 overflow-hidden bg-gradient-to-br from-purple-500/20 to-violet-600/20">

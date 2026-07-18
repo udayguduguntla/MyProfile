@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { ExternalLink, X, Trophy, Target, Medal, Brain, Code, Shield, Star } from 'lucide-react'
 import achievementsData from '@/data/achievements.json'
 
@@ -46,7 +46,7 @@ export default function AchievementsSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ type: 'spring', stiffness: 180, damping: 22 }}
           className="mb-12 sm:mb-14"
         >
           <div className="flex items-end justify-between">
@@ -140,6 +140,7 @@ function CredentialModal({ achievement, onClose }: { achievement: AchievementIte
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
@@ -147,7 +148,7 @@ function CredentialModal({ achievement, onClose }: { achievement: AchievementIte
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.2 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         className="relative w-full max-w-4xl overflow-hidden rounded-2xl border border-white/20 bg-gray-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >

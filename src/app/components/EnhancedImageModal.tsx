@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence, Variants } from 'framer-motion'
+import { motion, AnimatePresence, type Variants } from 'motion/react'
 import Image from 'next/image'
 
 interface EnhancedImageModalProps {
