@@ -5,166 +5,198 @@ import { useEffect, useRef } from 'react'
 interface Star {
   x: number
   y: number
-  size: number
+  baseSize: number
   opacity: number
   speed: number
-  twinkleSpeed: number
-  hue: number
+  twinkle: number
 }
 
 interface InteractiveStarBackgroundProps {
   variant?: 'default' | 'projects' | 'about' | 'achievements' | 'contact'
 }
 
+const glowByVariant = {
+  default: { cream: 0.22, sage: 0.1, radius: 260 },
+  projects: { cream: 0.26, sage: 0.12, radius: 280 },
+  about: { cream: 0.18, sage: 0.14, radius: 240 },
+  achievements: { cream: 0.24, sage: 0.08, radius: 250 },
+  contact: { cream: 0.2, sage: 0.16, radius: 270 },
+}
+
 export default function InteractiveStarBackground({ variant = 'default' }: InteractiveStarBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number | null>(null)
   const starsRef = useRef<Star[]>([])
-  const mouseRef = useRef({ x: 0, y: 0 })
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false })
+  const pointerRef = useRef({ x: -9999, y: -9999 })
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const finePointer = window.matchMedia('(pointer: fine)')
+    let running = true
+    const glow = glowByVariant[variant]
+
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-
-    resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-
-    const getVariantHue = (v: string) => {
-      switch (v) {
-        case 'projects': return 260
-        case 'about': return 280
-        case 'achievements': return 300
-        case 'contact': return 320
-        default: return 270
-      }
+      const ratio = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.floor(window.innerWidth * ratio)
+      canvas.height = Math.floor(window.innerHeight * ratio)
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
+      initStars()
     }
 
     const initStars = () => {
-      const stars: Star[] = []
-      const numStars = Math.min(80, Math.floor((canvas.width * canvas.height) / 12000))
-      for (let i = 0; i < numStars; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 1.8 + 0.4,
-          opacity: Math.random() * 0.7 + 0.3,
-          speed: Math.random() * 0.4 + 0.08,
-          twinkleSpeed: Math.random() * 0.015 + 0.005,
-          hue: getVariantHue(variant) + (Math.random() - 0.5) * 50
-        })
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const density = width < 768 ? 18000 : 11000
+      const count = Math.min(width < 768 ? 48 : 90, Math.floor((width * height) / density))
+      starsRef.current = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        baseSize: Math.random() * 1.4 + 0.45,
+        opacity: Math.random() * 0.45 + 0.25,
+        speed: Math.random() * 0.22 + 0.04,
+        twinkle: Math.random() * Math.PI * 2,
+      }))
+    }
+
+    const draw = (time: number) => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      ctx.clearRect(0, 0, width, height)
+      const pointer = pointerRef.current
+      const target = mouseRef.current
+      if (target.active) {
+        pointer.x += (target.x - pointer.x) * 0.12
+        pointer.y += (target.y - pointer.y) * 0.12
       }
-      starsRef.current = stars
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY }
-    }
-
-    const animate = (time: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       const stars = starsRef.current
-      const mouse = mouseRef.current
-
-      for (let i = 0; i < stars.length; i++) {
-        const star = stars[i]
-
-        star.y += star.speed
-        if (star.y > canvas.height + 10) {
-          star.y = -10
-          star.x = Math.random() * canvas.width
+      const glowing: Array<{ star: Star; influence: number }> = []
+      for (const star of stars) {
+        if (!motionQuery.matches) {
+          star.y += star.speed
+          if (star.y > height + 8) {
+            star.y = -8
+            star.x = Math.random() * width
+          }
         }
 
-        star.opacity += Math.sin(time * star.twinkleSpeed) * 0.01
+        const dx = star.x - pointer.x
+        const dy = star.y - pointer.y
+        const distance = Math.hypot(dx, dy)
+        const influence = target.active ? Math.max(0, 1 - distance / 180) : 0
+        const alpha = Math.min(1, star.opacity + Math.sin(time * 0.002 + star.twinkle) * 0.08 + influence * 0.55)
+        const size = star.baseSize * (1 + influence * 1.8)
 
-        const dx = star.x - mouse.x
-        const dy = star.y - mouse.y
-        const distance = dx * dx + dy * dy
+        ctx.fillStyle = `rgba(232, 210, 181, ${alpha})`
+        ctx.beginPath()
+        ctx.arc(star.x, star.y, size, 0, Math.PI * 2)
+        ctx.fill()
 
-        if (distance < 10000) {
-          const dist = Math.sqrt(distance)
-          const force = (100 - dist) / 100
-          star.x += (dx / dist) * force * 2
-          star.y += (dy / dist) * force * 2
-          star.size = Math.min(star.size * (1 + force * 0.4), 3.5)
-        } else {
-          star.size = Math.max(star.size * 0.99, 0.4)
+        if (influence > 0.15) {
+          glowing.push({ star, influence })
+          ctx.fillStyle = `rgba(165, 167, 155, ${influence * 0.35})`
+          ctx.beginPath()
+          ctx.arc(star.x, star.y, size * 3.2, 0, Math.PI * 2)
+          ctx.fill()
         }
+      }
 
-        if (star.x < 0) star.x = canvas.width
-        if (star.x > canvas.width) star.x = 0
-
-        const alpha = Math.max(0, Math.min(1, star.opacity))
-
-        ctx.save()
-        ctx.fillStyle = `hsla(${star.hue}, 70%, 85%, ${alpha})`
-        ctx.beginPath()
-        ctx.arc(star.x, star.y, star.size * 1.5, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.fillStyle = `hsla(${star.hue}, 80%, 92%, ${alpha})`
-        ctx.beginPath()
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.restore()
-
-        if (i % 4 === 0) {
-          for (let j = i + 1; j < stars.length; j++) {
-            const other = stars[j]
-            const dx = star.x - other.x
-            const dy = star.y - other.y
-            const dist = dx * dx + dy * dy
-            if (dist < 10000) {
-              const d = Math.sqrt(dist)
-              const opacity = (100 - d) / 100 * 0.2
-              ctx.strokeStyle = `hsla(${(star.hue + other.hue) / 2}, 60%, 70%, ${opacity})`
-              ctx.lineWidth = 0.4
-              ctx.beginPath()
-              ctx.moveTo(star.x, star.y)
-              ctx.lineTo(other.x, other.y)
-              ctx.stroke()
-            }
+      if (target.active && finePointer.matches && !motionQuery.matches) {
+        for (let i = 0; i < glowing.length; i += 1) {
+          let links = 0
+          for (let j = i + 1; j < glowing.length && links < 3; j += 1) {
+            const a = glowing[i]
+            const b = glowing[j]
+            const dx = a.star.x - b.star.x
+            const dy = a.star.y - b.star.y
+            const distance = Math.hypot(dx, dy)
+            if (distance <= 0 || distance > 190) continue
+            const strength = (1 - distance / 190) * Math.min(a.influence, b.influence)
+            ctx.strokeStyle = `rgba(89, 9, 7, ${strength * 0.55})`
+            ctx.lineWidth = 4
+            ctx.beginPath()
+            ctx.moveTo(a.star.x, a.star.y)
+            ctx.lineTo(b.star.x, b.star.y)
+            ctx.stroke()
+            ctx.strokeStyle = `rgba(165, 167, 155, ${strength * 0.55})`
+            ctx.lineWidth = 1.6
+            ctx.stroke()
+            ctx.strokeStyle = `rgba(232, 210, 181, ${strength * 0.9})`
+            ctx.lineWidth = 0.8
+            ctx.stroke()
+            links += 1
           }
         }
       }
 
-      if (mouse.x && mouse.y) {
-        const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 80)
-        gradient.addColorStop(0, `hsla(${getVariantHue(variant)}, 70%, 80%, 0.08)`)
-        gradient.addColorStop(1, 'transparent')
-        ctx.fillStyle = gradient
+      if (target.active && pointer.x > -1000) {
+        const outer = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, glow.radius)
+        outer.addColorStop(0, `rgba(232, 210, 181, ${glow.cream})`)
+        outer.addColorStop(0.34, `rgba(165, 167, 155, ${glow.sage})`)
+        outer.addColorStop(0.72, 'rgba(89, 9, 7, 0.05)')
+        outer.addColorStop(1, 'transparent')
+        ctx.fillStyle = outer
         ctx.beginPath()
-        ctx.arc(mouse.x, mouse.y, 80, 0, Math.PI * 2)
+        ctx.arc(pointer.x, pointer.y, glow.radius, 0, Math.PI * 2)
+        ctx.fill()
+
+        const core = ctx.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 42)
+        core.addColorStop(0, 'rgba(232, 210, 181, 0.72)')
+        core.addColorStop(1, 'transparent')
+        ctx.fillStyle = core
+        ctx.beginPath()
+        ctx.arc(pointer.x, pointer.y, 42, 0, Math.PI * 2)
         ctx.fill()
       }
 
-      animationRef.current = requestAnimationFrame(animate)
+      if (running && !motionQuery.matches) {
+        animationRef.current = requestAnimationFrame(draw)
+      }
     }
 
-    initStars()
-    window.addEventListener('mousemove', handleMouseMove)
-    animationRef.current = requestAnimationFrame(animate)
+    const onMove = (event: PointerEvent) => {
+      if (!finePointer.matches) return
+      mouseRef.current = { x: event.clientX, y: event.clientY, active: true }
+      if (pointerRef.current.x < -1000) pointerRef.current = { x: event.clientX, y: event.clientY }
+    }
+    const onLeave = () => {
+      mouseRef.current.active = false
+    }
+    const onVisibility = () => {
+      running = document.visibilityState === 'visible'
+      if (running && !motionQuery.matches) animationRef.current = requestAnimationFrame(draw)
+    }
+
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerleave', onLeave)
+    document.addEventListener('visibilitychange', onVisibility)
+    animationRef.current = requestAnimationFrame(draw)
+    if (motionQuery.matches) draw(0)
 
     return () => {
+      running = false
       window.removeEventListener('resize', resizeCanvas)
-      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerleave', onLeave)
+      document.removeEventListener('visibilitychange', onVisibility)
       if (animationRef.current) cancelAnimationFrame(animationRef.current)
     }
   }, [variant])
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 will-change-transform">
-      <canvas ref={canvasRef} className="w-full h-full" />
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-indigo-900/20" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-purple-800/10 to-transparent" />
+    <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+      <canvas ref={canvasRef} className="h-full w-full" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(232,210,181,0.08),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(165,167,155,0.08),transparent_34%)]" />
     </div>
   )
 }

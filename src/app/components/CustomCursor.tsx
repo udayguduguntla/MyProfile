@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { motion, useMotionValue, useSpring } from 'motion/react'
 
 export default function CustomCursor() {

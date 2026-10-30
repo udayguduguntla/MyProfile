@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="Color detection diagram">
+  <rect width="1200" height="720" rx="36" fill="#1d1c1a"/>
+  <circle cx="300" cy="360" r="120" fill="#E8D2B5"/>
+  <circle cx="600" cy="360" r="120" fill="#A5A79B"/>
+  <circle cx="900" cy="360" r="120" fill="#590907"/>
+  <text x="64" y="90" fill="#E8D2B5" font-family="Georgia, serif" font-size="42">Color detection</text>
+</svg>
