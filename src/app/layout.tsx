@@ -3,6 +3,7 @@ import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
 import SmoothScroll from './components/SmoothScroll'
 import ScrollProgress from './components/ScrollProgress'
+import HashLinks from './components/HashLinks'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -65,9 +66,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
       <body className={`${inter.className} ${instrumentSerif.variable}`}>
+        <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-cream focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
         <SmoothScroll>
+          <HashLinks />
           <ScrollProgress />
-          <main className="min-h-screen relative overflow-x-hidden">
+          <main id="content" className="min-h-screen relative overflow-x-hidden">
             {children}
           </main>
         </SmoothScroll>

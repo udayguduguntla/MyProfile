@@ -1,0 +1,857 @@
+[
+  {
+    "id": "worktual-rag",
+    "title": "Multi-Tenant Document Retrieval",
+    "shortName": "Document Retrieval",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A retrieval layer that lets chatbots answer from a customer’s own documents instead of only the model’s general knowledge.",
+    "problem": "Each customer has different policies, product notes, and FAQs, so one shared prompt cannot stay accurate.",
+    "contribution": "I worked on the ingestion and retrieval path: preparing documents, indexing them, and making relevant passages available to chatbot applications.",
+    "ownership": "collaborative",
+    "ownershipLabel": "Collaborative retrieval work",
+    "businessValue": "Customers can keep separate knowledge bases, and the same retrieval layer can serve more than one AI application.",
+    "introFocus": "The useful idea is tenant-aware retrieval: the answer comes from that organization’s documents, not from whatever the model happens to remember.",
+    "architecture": [
+      "Collect documents",
+      "Clean and chunk text",
+      "Embed and index passages",
+      "Retrieve for the right customer",
+      "Give that context to the model"
+    ],
+    "chatDetail": "The workflow accepts knowledge documents, extracts and chunks text, creates embeddings, and stores passages with metadata for search. Retrieval uses similarity search, including vector-index experiments, and can filter by metadata before the passages go to the model. I worked on retrieval quality and on making that layer usable by the chatbot applications. This is separate from my public RagChat learning project.",
+    "image": "/images/projects/rag-chat.svg",
+    "technologies": [
+      "Python",
+      "FastAPI",
+      "Embeddings",
+      "Vector search"
+    ],
+    "workflow": [
+      "Ingest",
+      "Chunk",
+      "Index",
+      "Retrieve",
+      "Answer"
+    ],
+    "modules": [],
+    "features": [
+      "Customer-specific knowledge",
+      "Chunking and metadata",
+      "Reusable retrieval for chatbots"
+    ],
+    "safeguards": "This is collaborative product work. I do not publish the employer implementation or claim I built the whole platform alone.",
+    "planned": [],
+    "aliases": [
+      "rag",
+      "retrieval",
+      "documents",
+      "knowledge base",
+      "embeddings",
+      "vector",
+      "meilisearch",
+      "faiss",
+      "chunk"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "RAG",
+    "isPublic": false,
+    "featured": true,
+    "status": "in progress",
+    "visibility": "featured",
+    "visualType": "rag"
+  },
+  {
+    "id": "worktual-chatbots",
+    "title": "Multi-Channel Conversational AI",
+    "shortName": "Chatbots",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "One conversational backend behind website chat, Facebook Messenger, and Instagram, instead of a separate bot for every channel.",
+    "problem": "Customers arrive on different channels, but the business still needs one consistent answer.",
+    "contribution": "I worked on the conversational backend and channel integration, connecting incoming messages with the model and the retrieval layer.",
+    "ownership": "collaborative",
+    "ownershipLabel": "Collaborative channel integration",
+    "businessValue": "The same intelligence can answer on the website, Messenger, and Instagram without rebuilding the bot for each platform.",
+    "introFocus": "The useful idea is one conversational backend: website, Messenger, and Instagram can share the same understanding instead of three separate bots.",
+    "architecture": [
+      "Receive a channel message",
+      "Identify the conversation",
+      "Retrieve knowledge when needed",
+      "Generate a reply",
+      "Send it back on the same channel"
+    ],
+    "chatDetail": "A message arrives by webhook from the website widget, Facebook Messenger, or Instagram. The backend identifies the conversation, optionally retrieves from the customer knowledge base, asks the model for a grounded reply, and returns it through the original channel. I contributed to that flow and the channel integration. It is team-owned product work, not my public RagChat demo.",
+    "image": "/images/projects/rag-chat.svg",
+    "technologies": [
+      "Python",
+      "FastAPI",
+      "LLMs",
+      "Channel APIs"
+    ],
+    "workflow": [
+      "Receive",
+      "Identify",
+      "Retrieve",
+      "Reply"
+    ],
+    "modules": [],
+    "features": [
+      "Website, Messenger, and Instagram",
+      "Shared conversational backend",
+      "Retrieval when the question needs company facts"
+    ],
+    "safeguards": "I contributed to the integration. I do not claim sole ownership of the contact-center product.",
+    "planned": [],
+    "aliases": [
+      "chatbot",
+      "chatbots",
+      "messenger",
+      "instagram",
+      "facebook",
+      "channel",
+      "conversation",
+      "webhook"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Conversational AI",
+    "isPublic": false,
+    "featured": true,
+    "status": "in progress",
+    "visibility": "featured",
+    "visualType": "conversation"
+  },
+  {
+    "id": "worktual-cdc",
+    "title": "Knowledge Graph CDC Pipeline",
+    "shortName": "CDC Pipeline",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A Python pipeline that turns product-database changes into a tenant-isolated knowledge graph.",
+    "problem": "Product data lives in separate relational schemas, while agents need the relationships between customers, conversations, tickets, campaigns, and teams.",
+    "contribution": "I independently built the Python CDC pipeline: configuration-driven mapping, tenant routing, graph writing, provisioning, and recovery handling. The ontology itself was a collaborative design.",
+    "ownership": "mixed",
+    "ownershipLabel": "Independent pipeline, collaborative ontology",
+    "businessValue": "Agents can follow real business relationships, and each organization stays in its own graph.",
+    "introFocus": "The useful idea is a reliable graph sync: relational product changes become connected business context without copying the same record twice.",
+    "architecture": [
+      "Read database changes",
+      "Stream those changes",
+      "Route by tenant from configuration",
+      "Write idempotent graph updates",
+      "Embed eligible nodes separately"
+    ],
+    "chatDetail": "PostgreSQL remains the system of record. Change events move through a CDC stream into a Python router. YAML mappings describe how tables become graph nodes and relationships, and Cypher MERGE writes are idempotent so replays do not duplicate them. Each organization gets its own graph database. Embeddings run in a separate worker so model work does not block event processing. The pipeline also covers provisioning, indexes, quarantined events, and reconciliation. I built that Python pipeline. The ontology and graph model were designed collaboratively, so I do not claim the whole knowledge platform alone.",
+    "image": "/images/projects/semantic-layer.svg",
+    "technologies": [
+      "Python",
+      "PostgreSQL",
+      "Neo4j",
+      "Cypher",
+      "CDC"
+    ],
+    "workflow": [
+      "Capture",
+      "Route",
+      "Merge",
+      "Embed"
+    ],
+    "modules": [],
+    "features": [
+      "Configuration-driven mappings",
+      "Tenant-isolated graphs",
+      "Idempotent writes",
+      "Separate embedding worker"
+    ],
+    "safeguards": "The ontology design was collaborative. My independent work is the Python CDC pipeline.",
+    "planned": [],
+    "aliases": [
+      "cdc",
+      "ontology",
+      "knowledge graph",
+      "neo4j",
+      "debezium",
+      "kafka",
+      "graph",
+      "pipeline"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Knowledge Graph",
+    "isPublic": false,
+    "featured": true,
+    "status": "in progress",
+    "visibility": "featured",
+    "visualType": "graph"
+  },
+  {
+    "id": "worktual-semantic",
+    "title": "Enterprise Semantic Layer",
+    "shortName": "Semantic Layer",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A business-meaning layer that lets people ask analytics questions without writing SQL or Cypher.",
+    "problem": "The product data spans hundreds of tables. A model cannot reliably guess what a missed call, a team, or a date window means.",
+    "contribution": "I designed and developed the Cypher Agent: schema exploration, iterative query generation, execution, and rolling conversation context. A colleague designed the SQL Agent. The wider multi-agent architecture was collaborative.",
+    "ownership": "mixed",
+    "ownershipLabel": "Cypher Agent mine, SQL Agent a colleague’s",
+    "businessValue": "Definitions, metrics, and dimensions stay consistent, so answers use the organization’s concepts instead of an improvised calculation.",
+    "introFocus": "The best thing this gives an organization is one agreed way to calculate and name its business concepts, so “missed calls” or “a team” means the same thing every time.",
+    "architecture": [
+      "Understand the question",
+      "Select the business domain",
+      "Apply definitions and metrics",
+      "Generate Cypher or SQL",
+      "Explain the result"
+    ],
+    "chatDetail": "A coordinating agent routes a natural-language question to a domain agent. That agent uses the semantic layer for definitions, metrics, dimensions, and database mappings, then an executor writes and runs the query. I owned the Cypher Agent: it inspects the graph schema, drafts a query, runs it, checks whether the result is enough, and refines it. I also worked on rolling context summaries for longer conversations and on connecting ontology context to that reasoning. A colleague owned the SQL Agent. The platform was discussed across a large shared schema, on the order of hundreds of tables, which is why controlled definitions matter. I do not claim I built the entire analytics platform.",
+    "image": "/images/projects/semantic-layer.svg",
+    "technologies": [
+      "Python",
+      "Cypher",
+      "Neo4j",
+      "LLMs",
+      "Semantic layer"
+    ],
+    "workflow": [
+      "Route",
+      "Define",
+      "Query",
+      "Refine",
+      "Explain"
+    ],
+    "modules": [],
+    "features": [
+      "Shared business definitions",
+      "Iterative Cypher exploration",
+      "Rolling conversation context",
+      "Separation from the SQL Agent"
+    ],
+    "safeguards": "The SQL Agent was a colleague’s work. I own the Cypher Agent and contributed to the shared architecture.",
+    "planned": [],
+    "aliases": [
+      "semantic",
+      "cypher",
+      "analytics",
+      "metrics",
+      "missed calls",
+      "super agent",
+      "domain agent"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Semantic Layer",
+    "isPublic": false,
+    "featured": true,
+    "status": "in progress",
+    "visibility": "featured",
+    "visualType": "semantic"
+  },
+  {
+    "id": "worktual-adk",
+    "title": "Agent Development Kit",
+    "shortName": "Agent Kit",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A reusable Python framework for agents, tools, memory, sessions, and multi-agent coordination.",
+    "problem": "Every new agent was at risk of reimplementing tools, memory, sessions, and handoffs.",
+    "contribution": "I worked collaboratively on the framework: agents, teams, orchestration, tools, skills, memory, sessions, and MCP tool import.",
+    "ownership": "collaborative",
+    "ownershipLabel": "Collaborative framework",
+    "businessValue": "Teams can build an agent once and reuse the same execution, memory, and tool model.",
+    "introFocus": "The useful idea is a shared agent kit: tools, memory, and handoffs are built once instead of being copied into every bot.",
+    "architecture": [
+      "Define an agent",
+      "Validate and run tools",
+      "Keep a session",
+      "Delegate through a team or orchestrator",
+      "Import external MCP tools"
+    ],
+    "chatDetail": "The kit models an LLM, an agent, a team, and an orchestrator. Tools pass through optional hooks, schema validation, execution, and a result returned to the model. Skills hold instructions that can be loaded when needed. Memory can be in-process or stored in PostgreSQL, with message history and summaries. A session manager keeps the runnable conversation by session id. An MCP client turns remote tools into the same local tool interface. I contributed to this framework with the team. I do not present it as a solo library.",
+    "image": "/images/projects/semantic-layer.svg",
+    "technologies": [
+      "Python",
+      "MCP",
+      "PostgreSQL",
+      "Pydantic",
+      "LLMs"
+    ],
+    "workflow": [
+      "Define",
+      "Validate",
+      "Execute",
+      "Remember"
+    ],
+    "modules": [],
+    "features": [
+      "Agent, team, and orchestrator",
+      "Validated tool calls",
+      "Persistent session memory",
+      "MCP tool import"
+    ],
+    "safeguards": "This was collaborative framework development.",
+    "planned": [],
+    "aliases": [
+      "adk",
+      "agent kit",
+      "framework",
+      "orchestrator",
+      "mcp",
+      "session",
+      "memory",
+      "skills"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Agent Platform",
+    "isPublic": false,
+    "featured": true,
+    "status": "in progress",
+    "visibility": "featured",
+    "visualType": "agent"
+  },
+  {
+    "id": "worktual-synthetic",
+    "title": "Synthetic Conversation Pipeline",
+    "shortName": "Synthetic Data",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A pipeline that generates structured conversational examples for testing and evaluation.",
+    "problem": "Hand-writing enough varied intents and phrasings does not scale.",
+    "contribution": "I contributed, with one teammate, to prompts, generation, structural validation, and regeneration of invalid samples.",
+    "ownership": "collaborative",
+    "ownershipLabel": "Collaborative data pipeline",
+    "businessValue": "The team can test more conversational situations without labeling every example by hand.",
+    "introFocus": "The useful idea is structured synthetic conversations: examples are validated against a schema, not stored as loose chat text.",
+    "architecture": [
+      "Define the scenario",
+      "Generate structured examples",
+      "Validate the shape",
+      "Regenerate invalid samples"
+    ],
+    "chatDetail": "The pipeline defines scenarios, sends generation instructions to model providers, checks the JSON structure, and regenerates incomplete samples. A collaborative batch discussed with a teammate was on the order of 26,000 structured samples. That scale was a two-person effort, not my individual output. Provider discussions included Gemini and NVIDIA-hosted models. I do not claim I produced that dataset alone.",
+    "image": "/images/projects/rag-chat.svg",
+    "technologies": [
+      "Python",
+      "LLMs",
+      "JSON",
+      "Validation"
+    ],
+    "workflow": [
+      "Prompt",
+      "Generate",
+      "Validate",
+      "Repair"
+    ],
+    "modules": [],
+    "features": [
+      "Structured JSON conversations",
+      "Validation and regeneration",
+      "Batch generation"
+    ],
+    "safeguards": "The large sample count was collaborative. I do not claim it as a solo result.",
+    "planned": [],
+    "aliases": [
+      "synthetic",
+      "dataset",
+      "generation",
+      "26000",
+      "samples",
+      "validation"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Data Generation",
+    "isPublic": false,
+    "featured": false,
+    "status": "in progress",
+    "visibility": "supporting",
+    "visualType": "data"
+  },
+  {
+    "id": "worktual-ticketing",
+    "title": "Ticketing Agent Skills",
+    "shortName": "Ticketing Agent",
+    "company": "Worktual",
+    "context": "Professional",
+    "employer": "Worktual",
+    "description": "A cleaner ticketing agent, with duplicate tools removed and instructions split into skills.",
+    "problem": "As tools accumulated, the agent prompt grew noisy and some capabilities overlapped or were missing.",
+    "contribution": "I reviewed the tool list, removed duplicates, found gaps, and reorganized prompts into modular skills.",
+    "ownership": "collaborative",
+    "ownershipLabel": "Collaborative agent improvement",
+    "businessValue": "The agent loads the instructions it needs, so the main prompt does not have to contain every ticket action.",
+    "introFocus": "The useful idea is modular skills: ticket creation, status, assignment, and updates can be loaded when needed instead of living in one giant prompt.",
+    "architecture": [
+      "Review tools",
+      "Remove duplicates",
+      "Add missing capabilities",
+      "Load the relevant skill"
+    ],
+    "chatDetail": "I reviewed the ticketing agent’s tools and instructions, removed duplicate tools, identified missing capabilities, and grouped behavior into skills such as creating a ticket, checking status, assigning it, and updating it. The relevant skill can be supplied when the task needs it. This was an improvement to a shared agent, not a product I built alone.",
+    "image": "/images/projects/semantic-layer.svg",
+    "technologies": [
+      "Python",
+      "Tool calling",
+      "Prompting"
+    ],
+    "workflow": [
+      "Review",
+      "Deduplicate",
+      "Split skills"
+    ],
+    "modules": [],
+    "features": [
+      "Duplicate tool removal",
+      "Modular ticket skills",
+      "Smaller core prompt"
+    ],
+    "safeguards": "I improved a shared agent. I do not claim ownership of the ticketing product.",
+    "planned": [],
+    "aliases": [
+      "ticket",
+      "ticketing",
+      "tools",
+      "skills",
+      "prompt"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Agent Systems",
+    "isPublic": false,
+    "featured": false,
+    "status": "in progress",
+    "visibility": "supporting",
+    "visualType": "agent"
+  },
+  {
+    "id": "seo-content-platform",
+    "title": "SEO Content Automation Platform",
+    "shortName": "SEO Platform",
+    "company": "Webfosys",
+    "context": "Professional",
+    "employer": "Webfosys",
+    "description": "Three connected Python tools for publishing articles, checking quality, and reading search performance.",
+    "problem": "A small content team was repeating publishing steps, reviews, and search checks across websites.",
+    "contribution": "I implemented the publishing flow, the rule-plus-model quality checker, and the Search Console reporting workflow.",
+    "ownership": "independent",
+    "ownershipLabel": "Implemented the three connected workflows",
+    "businessValue": "Publishing, review, and search monitoring sit in one operation instead of three manual routines.",
+    "introFocus": "The useful idea is one content operation: an article can be checked, published to the right site, and then watched in search results.",
+    "architecture": [
+      "Prepare the article",
+      "Check rules and model review",
+      "Publish through WordPress",
+      "Read Search Console metrics"
+    ],
+    "chatDetail": "The initiative has three modules. Publishing formats an article and sends it to WordPress with categories, tags, images, and a schedule. The quality checker combines deterministic SEO rules with a structured model review and can hold an article for a person when it misses the bar. Search reporting authenticates to Search Console and organizes clicks, impressions, CTR, and page or query movement for people to review. I do not present illustrative scores as measured production results. ZenX was a separate client assignment and is not part of this platform.",
+    "image": "/images/projects/seo-platform.svg",
+    "technologies": [
+      "Python",
+      "FastAPI",
+      "WordPress REST API",
+      "Search Console API",
+      "LLMs"
+    ],
+    "workflow": [
+      "Check",
+      "Publish",
+      "Monitor"
+    ],
+    "modules": [
+      {
+        "name": "WordPress publishing",
+        "detail": "Formats an article and publishes it to the selected site with metadata, media, and a schedule."
+      },
+      {
+        "name": "Quality checker",
+        "detail": "Runs measurable SEO rules and a structured model review before publication."
+      },
+      {
+        "name": "Search analytics",
+        "detail": "Collects clicks, impressions, CTR, queries, and pages for people to review."
+      }
+    ],
+    "features": [
+      "Multi-site publishing",
+      "Rules plus model review",
+      "Search Console reporting"
+    ],
+    "safeguards": "Employer code stays private. Example scores in discussion were illustrative, not recorded results. ZenX is not this platform.",
+    "planned": [
+      "Richer retry history",
+      "Stronger duplicate-publication guards"
+    ],
+    "aliases": [
+      "seo",
+      "webfosys",
+      "content platform",
+      "publishing platform"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Content Automation",
+    "isPublic": false,
+    "featured": true,
+    "status": "shipped",
+    "visibility": "featured",
+    "visualType": "automation"
+  },
+  {
+    "id": "webfosys-publishing",
+    "title": "WordPress Article Publishing",
+    "shortName": "WordPress Publishing",
+    "company": "Webfosys",
+    "context": "Professional",
+    "employer": "Webfosys",
+    "description": "A Python publisher that sends a prepared article to the right WordPress site.",
+    "problem": "Publishing the same article by hand meant repeating metadata, media, and scheduling on every site.",
+    "contribution": "I built the publishing workflow: formatting, API authentication, media upload, categories, tags, and scheduled posts.",
+    "ownership": "independent",
+    "ownershipLabel": "Implemented this workflow",
+    "businessValue": "A small team can publish across sites without repeating the same dashboard steps.",
+    "introFocus": "The useful idea is central publishing: one prepared article can go to the right WordPress site with its metadata and schedule.",
+    "architecture": [
+      "Receive the article",
+      "Format it for WordPress",
+      "Upload media",
+      "Create or schedule the post"
+    ],
+    "chatDetail": "The publisher accepts title, body, keywords, category, images, and a date. It authenticates to the WordPress REST API, uploads media, and creates the post with tags, categories, and scheduling. I implemented that workflow. It is one module of the SEO platform, not a separate employer.",
+    "image": "/images/projects/seo-platform.svg",
+    "technologies": [
+      "Python",
+      "WordPress REST API",
+      "REST"
+    ],
+    "workflow": [
+      "Format",
+      "Authenticate",
+      "Upload",
+      "Schedule"
+    ],
+    "modules": [],
+    "features": [
+      "Multi-site publishing",
+      "Featured images",
+      "Scheduled posts"
+    ],
+    "safeguards": "Private employer integration. No public repository.",
+    "planned": [],
+    "aliases": [
+      "wordpress",
+      "publish",
+      "publisher",
+      "cms"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Publishing",
+    "isPublic": false,
+    "featured": false,
+    "status": "shipped",
+    "visibility": "module",
+    "parentId": "seo-content-platform",
+    "visualType": "automation"
+  },
+  {
+    "id": "webfosys-quality",
+    "title": "Article Quality Checker",
+    "shortName": "Quality Checker",
+    "company": "Webfosys",
+    "context": "Professional",
+    "employer": "Webfosys",
+    "description": "A checker that combines measurable SEO rules with a structured model review.",
+    "problem": "Manual article review was slow and inconsistent, and a model alone is a poor calculator of fixed SEO rules.",
+    "contribution": "I implemented the rule checks, the structured model assessment, and the combined pass, review, or revise outcome.",
+    "ownership": "independent",
+    "ownershipLabel": "Implemented this workflow",
+    "businessValue": "Writers get a consistent review before publication, while a person still handles borderline articles.",
+    "introFocus": "The useful idea is a split review: rules count headings, keywords, and length, while the model judges whether the article actually fits the topic.",
+    "architecture": [
+      "Read the article",
+      "Run deterministic checks",
+      "Ask the model for structured review",
+      "Combine the result"
+    ],
+    "chatDetail": "Rules cover measurable items such as headings, keyword presence, length, and required metadata. The model reviews topic fit, search intent, completeness, and flow, and returns a structured assessment. A critical rule failure is not overridden by a flattering model score. Any score used as an example was illustrative, not a recorded production metric. I implemented this module.",
+    "image": "/images/projects/seo-platform.svg",
+    "technologies": [
+      "Python",
+      "LLMs",
+      "Rules",
+      "Structured output"
+    ],
+    "workflow": [
+      "Extract",
+      "Check rules",
+      "Review",
+      "Decide"
+    ],
+    "modules": [],
+    "features": [
+      "Deterministic SEO checks",
+      "Structured model review",
+      "Human review below the threshold"
+    ],
+    "safeguards": "Approval rates and scores were not recorded results. Example numbers were illustrative.",
+    "planned": [],
+    "aliases": [
+      "quality",
+      "checker",
+      "seo score",
+      "review",
+      "readability"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Quality",
+    "isPublic": false,
+    "featured": false,
+    "status": "shipped",
+    "visibility": "module",
+    "parentId": "seo-content-platform",
+    "visualType": "automation"
+  },
+  {
+    "id": "webfosys-search",
+    "title": "Search Performance Reporting",
+    "shortName": "Search Reporting",
+    "company": "Webfosys",
+    "context": "Professional",
+    "employer": "Webfosys",
+    "description": "A Python workflow that collects Search Console metrics for people to review.",
+    "problem": "Checking clicks, impressions, and CTR by hand across sites and pages took time.",
+    "contribution": "I implemented authentication, date-range collection, and the transformation of query and page metrics.",
+    "ownership": "independent",
+    "ownershipLabel": "Implemented this workflow",
+    "businessValue": "The team can see when impressions rise while CTR falls, and then decide what to investigate.",
+    "introFocus": "The useful idea is automated search context: clicks, impressions, and CTR are collected so a person can see what changed.",
+    "architecture": [
+      "Authenticate",
+      "Request a date range",
+      "Group queries and pages",
+      "Highlight movement for review"
+    ],
+    "chatDetail": "The workflow authenticates to the Google Search Console API, requests a site and date range, and organizes clicks, impressions, CTR, queries, and pages. It can show that impressions and clicks moved differently from CTR. I do not claim it made ranking decisions by itself. Recommendations stay for a person to review. I implemented this module.",
+    "image": "/images/projects/seo-platform.svg",
+    "technologies": [
+      "Python",
+      "Search Console API",
+      "Pandas"
+    ],
+    "workflow": [
+      "Authenticate",
+      "Collect",
+      "Compare",
+      "Review"
+    ],
+    "modules": [],
+    "features": [
+      "Query and page metrics",
+      "Period comparison",
+      "Human-reviewed follow-up"
+    ],
+    "safeguards": "Sample metric tables were illustrative. I do not present them as a client result.",
+    "planned": [],
+    "aliases": [
+      "search console",
+      "ctr",
+      "impressions",
+      "clicks",
+      "analytics",
+      "gsc"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Analytics",
+    "isPublic": false,
+    "featured": false,
+    "status": "shipped",
+    "visibility": "module",
+    "parentId": "seo-content-platform",
+    "visualType": "automation"
+  },
+  {
+    "id": "rag-chat",
+    "title": "RagChat",
+    "shortName": "RagChat",
+    "company": "Personal",
+    "context": "Personal",
+    "employer": "",
+    "description": "A small public chat interface for answering from retrieved documents.",
+    "problem": "A model needs a known set of documents before its answers can stay grounded.",
+    "contribution": "I built and published RagChat, with BasicRag as the earlier retrieval experiment.",
+    "ownership": "independent",
+    "ownershipLabel": "Personal learning project",
+    "businessValue": "It shows the ingest, retrieve, and answer path in public code, separate from employer systems.",
+    "introFocus": "RagChat is my public learning project for document-grounded chat. It is not the Worktual retrieval platform.",
+    "architecture": [
+      "Ingest documents",
+      "Retrieve passages",
+      "Answer from those passages"
+    ],
+    "chatDetail": "RagChat is a focused public repository at github.com/udayguduguntla/RagChat. BasicRag was the earlier script. I do not describe it as a multi-tenant production system.",
+    "image": "/images/projects/rag-chat.svg",
+    "technologies": [
+      "Python",
+      "RAG",
+      "LLMs"
+    ],
+    "workflow": [
+      "Ingest",
+      "Retrieve",
+      "Answer"
+    ],
+    "modules": [],
+    "features": [
+      "Public repository",
+      "Document-grounded chat",
+      "Clear learning scope"
+    ],
+    "safeguards": "This is a personal learning project, separate from Worktual retrieval.",
+    "planned": [
+      "Clearer evaluation of retrieved answers"
+    ],
+    "aliases": [
+      "ragchat",
+      "rag chat",
+      "basicrag",
+      "github rag"
+    ],
+    "github": "https://github.com/udayguduguntla/RagChat",
+    "readmeUrl": "https://github.com/udayguduguntla/BasicRag",
+    "workingUrl": "https://github.com/udayguduguntla/RagChat",
+    "category": "Personal RAG",
+    "isPublic": true,
+    "featured": false,
+    "status": "public",
+    "visibility": "personal",
+    "visualType": "rag"
+  },
+  {
+    "id": "color-detection",
+    "title": "Live Color Detection",
+    "shortName": "Color Detection",
+    "company": "Personal",
+    "context": "Personal",
+    "employer": "",
+    "description": "Camera-based color identification with spoken feedback.",
+    "problem": "People with color blindness need another way to identify a color in front of the camera.",
+    "contribution": "I built the Python and OpenCV application and published the repository.",
+    "ownership": "independent",
+    "ownershipLabel": "Personal project",
+    "businessValue": "It gives spoken color feedback from a live camera.",
+    "introFocus": "This is a public accessibility experiment: the camera names the color it sees.",
+    "architecture": [
+      "Capture a frame",
+      "Detect the color",
+      "Speak the result"
+    ],
+    "chatDetail": "The repository is Color-Detection-for-Color-Blindness-People. It is a personal computer-vision project, not employer work.",
+    "image": "/images/projects/color-detection.svg",
+    "technologies": [
+      "Python",
+      "OpenCV"
+    ],
+    "workflow": [
+      "Capture",
+      "Detect",
+      "Speak"
+    ],
+    "modules": [],
+    "features": [
+      "Live camera detection",
+      "Voice feedback"
+    ],
+    "safeguards": "",
+    "planned": [],
+    "aliases": [
+      "color",
+      "color blindness",
+      "opencv"
+    ],
+    "github": "https://github.com/udayguduguntla/Color-Detection-for-Color-Blindness-People",
+    "readmeUrl": "https://github.com/udayguduguntla/Color-Detection-for-Color-Blindness-People",
+    "workingUrl": "https://github.com/udayguduguntla/Color-Detection-for-Color-Blindness-People",
+    "category": "Computer Vision",
+    "isPublic": true,
+    "featured": false,
+    "status": "public",
+    "visibility": "personal",
+    "visualType": "vision"
+  },
+  {
+    "id": "license-plate",
+    "title": "License Plate Recognition",
+    "shortName": "License Plates",
+    "company": "Personal",
+    "context": "Personal",
+    "employer": "",
+    "description": "Plate localization and OCR experiments in one public project.",
+    "problem": "The plate has to be found in the image before the characters can be read.",
+    "contribution": "I implemented the detection and reading experiments and published LicensePlateDetention.",
+    "ownership": "independent",
+    "ownershipLabel": "Personal project",
+    "businessValue": "It is a public experiment in locating a plate and reading its text.",
+    "introFocus": "This public project first finds the plate, then reads the characters.",
+    "architecture": [
+      "Locate the plate",
+      "Read the characters",
+      "Review the text"
+    ],
+    "chatDetail": "The repository is LicensePlateDetention. It is a personal OpenCV and OCR experiment.",
+    "image": "/images/projects/license-plate.svg",
+    "technologies": [
+      "Python",
+      "OpenCV",
+      "OCR"
+    ],
+    "workflow": [
+      "Locate",
+      "Read",
+      "Review"
+    ],
+    "modules": [],
+    "features": [
+      "Plate localization",
+      "OCR"
+    ],
+    "safeguards": "",
+    "planned": [],
+    "aliases": [
+      "license",
+      "plate",
+      "anpr",
+      "ocr"
+    ],
+    "github": "https://github.com/udayguduguntla/LicensePlateDetention",
+    "readmeUrl": "https://github.com/udayguduguntla/LicensePlateDetention",
+    "workingUrl": "https://github.com/udayguduguntla/LicensePlateDetention",
+    "category": "Computer Vision",
+    "isPublic": true,
+    "featured": false,
+    "status": "public",
+    "visibility": "personal",
+    "visualType": "ocr"
+  }
+]

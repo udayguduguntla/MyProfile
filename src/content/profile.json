@@ -1,0 +1,243 @@
+{
+  "personal": {
+    "name": "Uday Kumar Guduguntla",
+    "title": "AI Engineer | Python Backend & Agent Systems",
+    "role": "Trainee Software Engineer – Python",
+    "tagline": "I build practical AI workflows: semantic context for agents, quality checks before publication, and automation that teams can actually operate.",
+    "description": "AI engineer and Python developer working on ontology, semantic layers, and conversational systems at Worktual, with prior backend work on a connected SEO content automation platform at Webfosys.",
+    "email": "udayguduguntla@gmail.com",
+    "phone": "+91 6302111386",
+    "location": "Chennai, India",
+    "avatar": "/images/profilePic.jpg",
+    "resume": "/resume/Uday.pdf"
+  },
+  "social": {
+    "github": "https://github.com/udayguduguntla",
+    "linkedin": "https://linkedin.com/in/udayguduguntla",
+    "leetcode": "https://leetcode.com/u/udayguduguntla",
+    "codechef": "https://codechef.com/users/udayguduguntla"
+  },
+  "skills": {
+    "AI & Agent Systems": [
+      "LLMs",
+      "RAG",
+      "Embeddings",
+      "Ontology",
+      "Semantic Layers",
+      "Agent Workflows",
+      "MCP"
+    ],
+    "Backend & Automation": [
+      "Python",
+      "FastAPI",
+      "REST APIs",
+      "WordPress REST API",
+      "CDC",
+      "Scheduling"
+    ],
+    "Data & Graph": [
+      "PostgreSQL",
+      "Neo4j",
+      "Cypher",
+      "SQL",
+      "Vector search",
+      "Google Search Console API"
+    ],
+    "Product Integrations": [
+      "Meta messaging APIs",
+      "Multi-tenant data flows",
+      "Authentication"
+    ],
+    "Interface": [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS"
+    ]
+  },
+  "experience": [
+    {
+      "title": "Trainee Software Engineer – Python",
+      "company": "Worktual",
+      "period": "Oct 2025 – Present",
+      "location": "Chennai, India",
+      "current": true,
+      "ownership": "I built the Python CDC pipeline. Ontology design, the SQL Agent, ADK, and the chatbot product were collaborative.",
+      "description": "Python work across retrieval, multi-channel chat, graph synchronization, and the Cypher side of analytics agents.",
+      "highlights": [
+        "Built the Python CDC pipeline that routes product-data changes into tenant-specific knowledge graphs.",
+        "Developed the Cypher Agent for the semantic analytics platform. A colleague owned the SQL Agent.",
+        "Contributed to document retrieval, website and Meta chatbots, ticketing-agent skills, and a shared agent kit."
+      ],
+      "technologies": [
+        "Python",
+        "LLMs",
+        "Neo4j",
+        "Cypher",
+        "PostgreSQL",
+        "RAG"
+      ],
+      "clientAssignment": null
+    },
+    {
+      "title": "Python Developer – Backend & Tools",
+      "company": "Webfosys Networks",
+      "period": "Jun 2024 – Jul 2025",
+      "location": "Bengaluru, India · Remote",
+      "current": false,
+      "ownership": "Implemented the connected publishing, quality, and analytics workflow. Further history and retry features were planned.",
+      "description": "Built Python backend tooling for a multi-site SEO content operation, from article checks through WordPress publication and search reporting.",
+      "highlights": [
+        "Shipped a FastAPI publishing flow for categories, tags, images, site selection, scheduling, and publication status.",
+        "Shipped rule-based SEO checks plus structured LLM review, with human review below the approval threshold.",
+        "Shipped Search Console reporting for clicks, impressions, CTR, average position, queries, and pages.",
+        "Kept critical failures, such as a wrong destination site, from being overridden by a high score."
+      ],
+      "technologies": [
+        "Python",
+        "FastAPI",
+        "WordPress REST API",
+        "LLM APIs",
+        "Search Console API"
+      ],
+      "clientAssignment": {
+        "client": "ZenX",
+        "period": "Jul 2025 – Sep 2025",
+        "location": "Dubai, UAE · On-site",
+        "summary": "Client assignment through Webfosys on a cross-border digital payments application, including digital-asset payments and automated currency conversion.",
+        "highlights": [
+          "Explored Web3 and digital-asset payment flows",
+          "Worked on backend tooling around conversion and transaction workflows"
+        ]
+      }
+    }
+  ],
+  "leadership": [
+    {
+      "title": "Technical Trainer",
+      "organization": "CodeTantra",
+      "period": "Feb 2025 – Jul 2025",
+      "context": "College-linked internship",
+      "summary": "Taught Python through interactive and gamified sessions, adapting explanations to different learners and building confidence speaking with groups.",
+      "skills": [
+        "Teaching",
+        "Facilitation",
+        "Public speaking",
+        "Adaptability"
+      ]
+    }
+  ],
+  "achievements": [
+    {
+      "category": "Competitive coding",
+      "items": [
+        {
+          "title": "TCS CodeVita Season 12",
+          "description": "Global rank 7574 in a large coding competition. It tested problem solving under contest conditions.",
+          "year": "2024",
+          "result": "Global rank 7574",
+          "featured": true,
+          "postUrl": "https://lnkd.in/p/gHP7BwwU",
+          "credentialUrl": ""
+        },
+        {
+          "title": "NEXUSVERSE 2.0 Reverse Coding",
+          "description": "Second place in Reverse Coding hosted by IEEE SB NBKRIST, with a cash award of 1000 INR.",
+          "year": "2024",
+          "result": "2nd place",
+          "featured": true,
+          "postUrl": "https://lnkd.in/p/g8m8UKXb",
+          "credentialUrl": ""
+        }
+      ]
+    },
+    {
+      "category": "Recognition",
+      "items": [
+        {
+          "title": "AINCAT 2025",
+          "description": "National rank 3567 in Naukri.com's career aptitude test.",
+          "year": "2025",
+          "result": "Rank 3567",
+          "featured": false,
+          "postUrl": "https://lnkd.in/p/g_SPN2Xe",
+          "credentialUrl": ""
+        },
+        {
+          "title": "DevFista Hackathon",
+          "description": "First place with an AI solution.",
+          "year": "2024",
+          "result": "1st prize",
+          "featured": false,
+          "postUrl": "https://lnkd.in/p/gna58q2J",
+          "credentialUrl": ""
+        },
+        {
+          "title": "TechChroma",
+          "description": "First place for project development and presentation.",
+          "year": "2024",
+          "result": "1st prize",
+          "featured": false,
+          "postUrl": "https://lnkd.in/p/g4sEcZuG",
+          "credentialUrl": ""
+        },
+        {
+          "title": "CVCORP",
+          "description": "Selected among the top 40 participants.",
+          "year": "2024",
+          "result": "Top 40",
+          "featured": false,
+          "postUrl": "https://lnkd.in/p/gzc38sn2",
+          "credentialUrl": ""
+        },
+        {
+          "title": "MCP certification",
+          "description": "Certification in the Model Context Protocol.",
+          "year": "2025",
+          "result": "Certified",
+          "featured": false,
+          "postUrl": "",
+          "credentialUrl": "/certificates/mcp.pdf"
+        }
+      ]
+    },
+    {
+      "category": "Campus",
+      "items": [
+        {
+          "title": "Web Development Event",
+          "description": "Hosted a web development event.",
+          "year": "",
+          "result": "Hosted",
+          "featured": false,
+          "postUrl": "https://lnkd.in/p/g57kpGgE",
+          "credentialUrl": ""
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "institution": "Narayana Engineering College",
+      "period": "2023 – 2025",
+      "description": "Focused on AI, machine learning, and software development.",
+      "cgpa": "9.0",
+      "status": "completed"
+    },
+    {
+      "degree": "Bachelor of Science (B.Sc)",
+      "institution": "Vikrama Simhapuri University",
+      "period": "2020 – 2023",
+      "description": "Built the computer-science foundation used in later backend and AI work.",
+      "cgpa": "9.2",
+      "status": "completed"
+    }
+  ],
+  "contact": {
+    "email": "udayguduguntla@gmail.com",
+    "phone": "+91 6302111386",
+    "location": "Chennai, India",
+    "availability": "Open to AI Engineer and Python backend roles"
+  }
+}

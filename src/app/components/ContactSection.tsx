@@ -59,7 +59,7 @@ export default function ContactSection() {
               {[
                 { Icon: Mail, label: 'Email', value: portfolioData.contact.email, href: `mailto:${portfolioData.contact.email}` },
                 { Icon: MapPin, label: 'Location', value: portfolioData.contact.location },
-                { Icon: Phone, label: 'Phone', value: portfolioData.contact.phone },
+                { Icon: Phone, label: 'Phone', value: portfolioData.contact.phone, href: `tel:${portfolioData.contact.phone.replace(/\s/g, '')}` },
               ].map((item) => (
                 <motion.div
                   key={item.label}

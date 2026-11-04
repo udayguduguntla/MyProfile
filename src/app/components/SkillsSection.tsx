@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react'
 import { portfolioData } from '@/data/portfolio'
+import { hintResumeSkill } from './ResumeAssistant'
 
 export default function SkillsSection() {
   return (
@@ -19,14 +20,21 @@ export default function SkillsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ delay: index * 0.04 }}
-              className="rounded-3xl border border-cream/15 bg-white/[0.05] p-5 backdrop-blur-xl transition hover:-translate-y-1 hover:border-cream/35 hover:shadow-[0_18px_50px_rgba(232,210,181,0.08)]"
+              className={`rounded-3xl border bg-white/[0.05] p-5 backdrop-blur-xl transition hover:-translate-y-1 ${index % 3 === 0 ? 'border-burgundy/50 hover:border-cream/40' : index % 3 === 1 ? 'border-sage/40 hover:border-sage' : 'border-cream/25 hover:border-cream/50'}`}
             >
               <h3 className="text-sm font-semibold uppercase tracking-wider text-cream">{group}</h3>
               <div className="mt-4 flex flex-wrap gap-2">
                 {skills.map((skill) => (
-                  <span key={skill} className="rounded-full border border-cream/10 bg-ink/40 px-3 py-1.5 text-xs text-sage">
+                  <button
+                    key={skill}
+                    type="button"
+                    data-skill={skill}
+                    onMouseEnter={() => hintResumeSkill(skill)}
+                    onFocus={() => hintResumeSkill(skill)}
+                    className={`cursor-pointer rounded-full border px-3 py-1.5 text-xs transition hover:border-cream/70 ${index % 3 === 1 ? 'border-sage/30 bg-sage/15 text-cream' : 'border-cream/15 bg-burgundy/50 text-sage'}`}
+                  >
                     {skill}
-                  </span>
+                  </button>
                 ))}
               </div>
             </motion.article>

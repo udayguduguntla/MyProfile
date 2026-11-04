@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useState } from 'react'
 import { portfolioData } from '@/data/portfolio'
 
@@ -25,8 +24,8 @@ export default function HeroSection() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="#projects" className="rounded-full bg-burgundy px-5 py-3 text-sm font-semibold text-cream">View case studies</Link>
-            <Link href="#contact" className="rounded-full border border-cream/30 px-5 py-3 text-sm font-semibold text-cream">Contact</Link>
+            <a href="#projects" className="rounded-full bg-burgundy px-5 py-3 text-sm font-semibold text-cream">View case studies</a>
+            <a href="#contact" className="rounded-full border border-cream/30 px-5 py-3 text-sm font-semibold text-cream">Contact</a>
             <a href={portfolioData.personal.resume} className="rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink">Resume PDF</a>
           </div>
         </div>

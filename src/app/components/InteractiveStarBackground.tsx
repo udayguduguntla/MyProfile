@@ -5,6 +5,8 @@ import { useEffect, useRef } from 'react'
 interface Star {
   x: number
   y: number
+  ox: number
+  oy: number
   baseSize: number
   opacity: number
   speed: number
@@ -59,6 +61,8 @@ export default function InteractiveStarBackground({ variant = 'default' }: Inter
       starsRef.current = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
+        ox: 0,
+        oy: 0,
         baseSize: Math.random() * 1.4 + 0.45,
         opacity: Math.random() * 0.45 + 0.25,
         speed: Math.random() * 0.22 + 0.04,
@@ -85,26 +89,44 @@ export default function InteractiveStarBackground({ variant = 'default' }: Inter
           if (star.y > height + 8) {
             star.y = -8
             star.x = Math.random() * width
+            star.ox = 0
+            star.oy = 0
           }
         }
 
         const dx = star.x - pointer.x
         const dy = star.y - pointer.y
         const distance = Math.hypot(dx, dy)
-        const influence = target.active ? Math.max(0, 1 - distance / 180) : 0
-        const alpha = Math.min(1, star.opacity + Math.sin(time * 0.002 + star.twinkle) * 0.08 + influence * 0.55)
-        const size = star.baseSize * (1 + influence * 1.8)
+        const reach = 340
+        const proximity = target.active ? Math.max(0, 1 - distance / reach) : 0
+        const influence = proximity ** 1.35
+        const canRepel = target.active && finePointer.matches && !motionQuery.matches && distance > 0.5 && distance < reach
+        const push = canRepel ? influence * influence * 58 : 0
+        const targetOx = canRepel ? (dx / distance) * push : 0
+        const targetOy = canRepel ? (dy / distance) * push : 0
+        if (!motionQuery.matches) {
+          star.ox += (targetOx - star.ox) * 0.12
+          star.oy += (targetOy - star.oy) * 0.12
+          if (!target.active && Math.hypot(star.ox, star.oy) < 0.25) {
+            star.ox = 0
+            star.oy = 0
+          }
+        }
+        const drawX = star.x + star.ox
+        const drawY = star.y + star.oy
+        const alpha = Math.min(1, star.opacity + Math.sin(time * 0.002 + star.twinkle) * 0.08 + influence * 0.7)
+        const size = star.baseSize * (1 + influence * 2.1)
 
         ctx.fillStyle = `rgba(232, 210, 181, ${alpha})`
         ctx.beginPath()
-        ctx.arc(star.x, star.y, size, 0, Math.PI * 2)
+        ctx.arc(drawX, drawY, size, 0, Math.PI * 2)
         ctx.fill()
 
-        if (influence > 0.15) {
-          glowing.push({ star, influence })
-          ctx.fillStyle = `rgba(165, 167, 155, ${influence * 0.35})`
+        if (influence > 0.08) {
+          glowing.push({ star: { ...star, x: drawX, y: drawY }, influence })
+          ctx.fillStyle = `rgba(165, 167, 155, ${influence * 0.4})`
           ctx.beginPath()
-          ctx.arc(star.x, star.y, size * 3.2, 0, Math.PI * 2)
+          ctx.arc(drawX, drawY, size * (2.2 + influence * 2), 0, Math.PI * 2)
           ctx.fill()
         }
       }
