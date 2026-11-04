@@ -45,7 +45,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       onClick={onClose}
     >
       <article
-        className="max-h-[min(86vh,calc(100dvh-8rem))] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-[2rem] border border-sage/35 bg-gradient-to-b from-[#4a1814] via-[#2a0d0b] to-[#31372c] p-6 text-white shadow-2xl [scrollbar-color:rgba(232,210,181,0.5)_transparent] sm:p-8"
+        className="max-h-[min(86vh,calc(100dvh-8rem))] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-[2rem] border border-sage/35 bg-gradient-to-b from-[#4a1814] via-[#2a0d0b] to-[#31372c] p-6 text-white shadow-2xl sm:p-8"
         ref={dialogRef}
         tabIndex={-1}
         data-lenis-prevent

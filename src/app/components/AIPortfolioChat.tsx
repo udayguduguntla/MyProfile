@@ -217,7 +217,7 @@ function ChatComposer({
 
 function QuickPromptDock({ onPrompt }: { onPrompt: (prompt: string, intent: Intent) => void }) {
   return (
-    <div className="flex w-full max-w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto px-2 py-1 [scrollbar-width:none] md:justify-center [&::-webkit-scrollbar]:hidden">
+    <div className="flex w-full max-w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto px-2 py-1 md:justify-center">
       {quickPrompts.map(({ label, prompt, intent, Icon, color }) => (
         <motion.button
           key={label}
@@ -369,7 +369,7 @@ function ResponseContent({ intent, projectId, onProjectSelect }: { intent: Inten
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-3xl font-bold text-white">{focused ? focused.shortName : 'Featured Projects'}</h2>
         </div>
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-5 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-5 pt-2">
           {cards.map((project) => (
             <ProjectCard key={project.id} project={project} onClick={() => onProjectSelect(project)} />
           ))}

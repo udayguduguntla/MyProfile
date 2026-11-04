@@ -63,7 +63,7 @@ function RecordRail({ title, items, selected, onSelect, onCreate }: { title: str
         <p className="text-xs uppercase tracking-[0.16em] text-sage">{title}</p>
         <button type="button" onClick={onCreate} className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-ink">New</button>
       </div>
-      <div className="mt-3 grid max-h-[28rem] gap-2 overflow-y-auto">
+      <div data-lenis-prevent className="mt-3 grid max-h-[28rem] gap-2 overflow-y-auto overscroll-contain">
         {items.map((item, index) => (
           <button key={item.key} type="button" onClick={() => onSelect(index)} className={`rounded-2xl border px-3 py-2 text-left ${index === selected ? 'border-cream bg-cream text-ink' : 'border-white/15 text-cream hover:border-cream/40'}`}>
             <span className="block text-sm font-semibold">{item.label}</span>
