@@ -17,12 +17,74 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T
 }
 
+const field = 'mt-1 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-cream outline-none focus:border-cream/50'
+
+function blankProject(index: number): Project {
+  return {
+    id: `project-${index + 1}`,
+    title: 'New project',
+    shortName: 'New project',
+    company: 'Personal',
+    context: 'Personal',
+    employer: '',
+    description: 'Describe the project in one or two sentences.',
+    problem: 'Describe the problem this project addresses.',
+    contribution: 'Describe what you built or owned.',
+    ownership: 'independent',
+    ownershipLabel: 'Independent',
+    businessValue: 'Describe the value of the work.',
+    introFocus: 'Describe the one idea to introduce first.',
+    architecture: ['Step one'],
+    chatDetail: 'Longer detail the chat can use, without private code.',
+    image: '/images/projects/rag-chat.svg',
+    technologies: ['Python'],
+    workflow: ['Start', 'Finish'],
+    modules: [],
+    features: [],
+    safeguards: '',
+    planned: [],
+    aliases: ['new'],
+    github: '',
+    readmeUrl: '',
+    workingUrl: '',
+    category: 'Project',
+    isPublic: false,
+    featured: false,
+    status: 'draft',
+    visibility: 'personal',
+    visualType: 'automation',
+  }
+}
+
+function RecordRail({ title, items, selected, onSelect, onCreate }: { title: string; items: { key: string; label: string; detail: string }[]; selected: number; onSelect: (index: number) => void; onCreate: () => void }) {
+  return (
+    <div className="rounded-[1.5rem] border border-white/15 p-3">
+      <div className="flex items-center justify-between gap-2 px-1">
+        <p className="text-xs uppercase tracking-[0.16em] text-sage">{title}</p>
+        <button type="button" onClick={onCreate} className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-ink">New</button>
+      </div>
+      <div className="mt-3 grid max-h-[28rem] gap-2 overflow-y-auto">
+        {items.map((item, index) => (
+          <button key={item.key} type="button" onClick={() => onSelect(index)} className={`rounded-2xl border px-3 py-2 text-left ${index === selected ? 'border-cream bg-cream text-ink' : 'border-white/15 text-cream hover:border-cream/40'}`}>
+            <span className="block text-sm font-semibold">{item.label}</span>
+            <span className={`block truncate text-xs ${index === selected ? 'text-ink/70' : 'text-cream/60'}`}>{item.detail}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function StudioEditor({ initialProfile, initialProjects }: { initialProfile: Profile; initialProjects: Project[] }) {
   const [profile, setProfile] = useState<Profile>(initialProfile)
   const [projects, setProjects] = useState<Project[]>(initialProjects)
   const [assets, setAssets] = useState<Asset[]>([])
   const [section, setSection] = useState<(typeof sections)[number]>('Profile')
   const [selectedProject, setSelectedProject] = useState(0)
+  const [selectedExperience, setSelectedExperience] = useState(0)
+  const [selectedAchievement, setSelectedAchievement] = useState(0)
+  const [selectedEducation, setSelectedEducation] = useState(0)
+  const [selectedLeadership, setSelectedLeadership] = useState(0)
   const [dirty, setDirty] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [status, setStatus] = useState('')
@@ -155,47 +217,43 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
           </fieldset>
         )}
 
-        {section === 'Experience' && profile.experience.map((role, index) => (
-          <fieldset key={`${role.company}-${index}`} className="grid gap-3 rounded-3xl border border-white/10 p-4">
-            <legend className="px-2 text-lg">{role.company}</legend>
-            <div className="flex gap-2">
-              <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, index, -1); saveDraft(next, projects) }}>Move up</button>
-              <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, index, 1); saveDraft(next, projects) }}>Move down</button>
-              <button type="button" onClick={() => { const next = clone(profile); next.experience.splice(index, 1); saveDraft(next, projects) }}>Delete</button>
-            </div>
-            <label className="text-sm">Role<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.title} onChange={(event) => updateExperience(index, { title: event.target.value })} /></label>
-            <label className="text-sm">Employer<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.company} onChange={(event) => updateExperience(index, { company: event.target.value })} /></label>
-            <label className="text-sm">Dates<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.period} onChange={(event) => updateExperience(index, { period: event.target.value })} /></label>
-            <label className="text-sm">Location<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.location} onChange={(event) => updateExperience(index, { location: event.target.value })} /></label>
-            <label className="text-sm">Summary<textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.description} onChange={(event) => updateExperience(index, { description: event.target.value })} /></label>
-            <label className="text-sm">Ownership<textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.ownership} onChange={(event) => updateExperience(index, { ownership: event.target.value })} /></label>
-            <label className="text-sm">Highlights, one per line<textarea className="mt-1 min-h-28 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.highlights.join('\n')} onChange={(event) => updateExperience(index, { highlights: event.target.value.split('\n').filter(Boolean) })} /></label>
-            <label className="text-sm">Technologies, comma separated<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={role.technologies.join(', ')} onChange={(event) => updateExperience(index, { technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) })} /></label>
-          </fieldset>
-        ))}
-        {section === 'Experience' && (
-          <button type="button" className="rounded-full bg-cream px-4 py-2 text-sm font-semibold text-ink" onClick={() => {
-            const next = clone(profile)
-            next.experience.push({ title: 'New role', company: 'Company', period: '2026 – Present', location: 'Chennai, India', current: false, ownership: 'Describe what you owned and what was shared.', description: 'Describe the work in one or two sentences.', highlights: ['Add a concrete highlight.'], technologies: ['Python'], clientAssignment: null })
-            saveDraft(next, projects)
-          }}>Add experience</button>
+        {section === 'Experience' && profile.experience[selectedExperience] && (
+          <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+            <fieldset className="grid gap-3">
+              <legend className="font-serif text-3xl">Experience</legend>
+              <label className="text-sm text-sage">Role<input className={field} value={profile.experience[selectedExperience].title} onChange={(event) => updateExperience(selectedExperience, { title: event.target.value })} /></label>
+              <label className="text-sm text-sage">Employer<input className={field} value={profile.experience[selectedExperience].company} onChange={(event) => updateExperience(selectedExperience, { company: event.target.value })} /></label>
+              <label className="text-sm text-sage">Dates<input className={field} value={profile.experience[selectedExperience].period} onChange={(event) => updateExperience(selectedExperience, { period: event.target.value })} /></label>
+              <label className="text-sm text-sage">Location<input className={field} value={profile.experience[selectedExperience].location} onChange={(event) => updateExperience(selectedExperience, { location: event.target.value })} /></label>
+              <label className="text-sm text-sage">Summary<textarea className={field} value={profile.experience[selectedExperience].description} onChange={(event) => updateExperience(selectedExperience, { description: event.target.value })} /></label>
+              <label className="text-sm text-sage">Ownership<textarea className={field} value={profile.experience[selectedExperience].ownership} onChange={(event) => updateExperience(selectedExperience, { ownership: event.target.value })} /></label>
+              <label className="text-sm text-sage">Highlights, one per line<textarea className={`${field} min-h-28`} value={profile.experience[selectedExperience].highlights.join('\n')} onChange={(event) => updateExperience(selectedExperience, { highlights: event.target.value.split('\n').filter(Boolean) })} /></label>
+              <label className="text-sm text-sage">Technologies<input className={field} value={profile.experience[selectedExperience].technologies.join(', ')} onChange={(event) => updateExperience(selectedExperience, { technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) })} /></label>
+              <div className="flex gap-2 text-sm">
+                <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, selectedExperience, -1); saveDraft(next, projects); setSelectedExperience(Math.max(0, selectedExperience - 1)) }}>Move up</button>
+                <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, selectedExperience, 1); saveDraft(next, projects); setSelectedExperience(Math.min(profile.experience.length - 1, selectedExperience + 1)) }}>Move down</button>
+                <button type="button" onClick={() => { if (profile.experience.length < 2) return; const next = clone(profile); next.experience.splice(selectedExperience, 1); saveDraft(next, projects); setSelectedExperience(0) }}>Delete</button>
+              </div>
+            </fieldset>
+            <RecordRail title="Roles" selected={selectedExperience} onSelect={setSelectedExperience} onCreate={() => {
+              const next = clone(profile)
+              next.experience.push({ title: 'New role', company: 'Company', period: '2026 – Present', location: 'Chennai, India', current: false, ownership: 'Describe what you owned and what was shared.', description: 'Describe the work in one or two sentences.', highlights: ['Add a concrete highlight.'], technologies: ['Python'], clientAssignment: null })
+              saveDraft(next, projects)
+              setSelectedExperience(next.experience.length - 1)
+            }} items={profile.experience.map((role, index) => ({ key: `${role.company}-${index}`, label: role.company, detail: role.title }))} />
+          </div>
         )}
 
         {section === 'Projects' && project && (
-          <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+          <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
             <fieldset className="grid gap-3">
               <legend className="font-serif text-3xl">Project</legend>
-              <label className="text-sm">Choose
-                <select className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={selectedProject} onChange={(event) => setSelectedProject(Number(event.target.value))}>
-                  {projects.map((item, index) => <option key={item.id} value={index}>{item.shortName}</option>)}
-                </select>
-              </label>
               {([
                 ['title', 'Title'], ['shortName', 'Short name'], ['problem', 'Problem'], ['contribution', 'Your contribution'],
                 ['ownershipLabel', 'Ownership label'], ['businessValue', 'Value'], ['chatDetail', 'Chat detail'],
               ] as const).map(([field, label]) => (
                 <label key={field} className="text-sm">{label}
-                  <textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={project[field]} onChange={(event) => {
+                  <textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-cream" value={project[field]} onChange={(event) => {
                     const next = clone(projects)
                     next[selectedProject] = { ...next[selectedProject], [field]: event.target.value }
                     saveDraft(profile, next)
@@ -203,7 +261,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                 </label>
               ))}
               <label className="text-sm">Ownership
-                <select className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={project.ownership} onChange={(event) => {
+                <select className="mt-1 w-full rounded-xl border border-white/15 bg-[#2a0d0b] px-3 py-2 text-cream" value={project.ownership} onChange={(event) => {
                   const next = clone(projects)
                   next[selectedProject] = { ...next[selectedProject], ownership: event.target.value as Project['ownership'] }
                   saveDraft(profile, next)
@@ -214,7 +272,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                 </select>
               </label>
               <label className="text-sm">System visual
-                <select className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={project.visualType} onChange={(event) => {
+                <select className="mt-1 w-full rounded-xl border border-white/15 bg-[#2a0d0b] px-3 py-2 text-cream" value={project.visualType} onChange={(event) => {
                   const next = clone(projects)
                   next[selectedProject] = { ...next[selectedProject], visualType: event.target.value as Project['visualType'] }
                   saveDraft(profile, next)
@@ -223,22 +281,15 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                 </select>
               </label>
               <label className="text-sm">Aliases, comma separated
-                <input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={project.aliases.join(', ')} onChange={(event) => {
+                <input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-cream" value={project.aliases.join(', ')} onChange={(event) => {
                   const next = clone(projects)
                   next[selectedProject] = { ...next[selectedProject], aliases: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }
                   saveDraft(profile, next)
                 }} />
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 text-sm">
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, -1); saveDraft(profile, next); setSelectedProject(Math.max(0, selectedProject - 1)) }}>Move up</button>
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, 1); saveDraft(profile, next); setSelectedProject(Math.min(projects.length - 1, selectedProject + 1)) }}>Move down</button>
-                <button type="button" onClick={() => {
-                  const next = clone(projects)
-                  const source = next[selectedProject]
-                  next.push({ ...source, id: `project-${next.length + 1}`, title: 'New project', shortName: 'New project', parentId: undefined })
-                  saveDraft(profile, next)
-                  setSelectedProject(next.length - 1)
-                }}>Add project</button>
                 <button type="button" onClick={() => {
                   if (projects.length < 2) return
                   const next = projects.filter((_, index) => index !== selectedProject)
@@ -247,34 +298,64 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                 }}>Delete</button>
               </div>
             </fieldset>
-            <aside className="rounded-[1.8rem] border border-sage/35 bg-gradient-to-br from-[#3a1210] to-[#31372c] p-4">
+            <aside className="space-y-4">
+              <RecordRail title="Projects" selected={selectedProject} onSelect={setSelectedProject} onCreate={() => {
+                const next = [...projects, blankProject(projects.length)]
+                saveDraft(profile, next)
+                setSelectedProject(next.length - 1)
+              }} items={projects.map((item) => ({ key: item.id, label: item.shortName, detail: item.title }))} />
+            <div className="rounded-[1.8rem] border border-sage/35 bg-gradient-to-br from-[#3a1210] to-[#31372c] p-4">
               <p className="text-xs uppercase tracking-[0.16em] text-sage">Preview</p>
               <div className="mt-3 h-24 overflow-hidden rounded-2xl"><SystemGlyph type={project.visualType} /></div>
               <h2 className="mt-3 font-serif text-2xl">{project.title}</h2>
               <p className="mt-2 text-sm text-white/80">{project.problem}</p>
               <p className="mt-3 text-sm text-cream">{project.contribution}</p>
+            </div>
             </aside>
           </div>
         )}
 
-        {section === 'Achievements' && profile.achievements.map((group, groupIndex) => (
-          <fieldset key={group.category} className="grid gap-3 rounded-3xl border border-white/10 p-4">
-            <legend className="px-2">{group.category}</legend>
-            {group.items.map((item, itemIndex) => (
-              <div key={`${item.title}-${itemIndex}`} className="grid gap-2 border-t border-white/10 pt-3">
-                <label className="text-sm">Result<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.result} onChange={(event) => { const next = clone(profile); next.achievements[groupIndex].items[itemIndex].result = event.target.value; saveDraft(next, projects) }} /></label>
-                <label className="text-sm">Date or year<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.year} onChange={(event) => { const next = clone(profile); next.achievements[groupIndex].items[itemIndex].year = event.target.value; saveDraft(next, projects) }} /></label>
-                <label className="text-sm">Description<textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.description} onChange={(event) => { const next = clone(profile); next.achievements[groupIndex].items[itemIndex].description = event.target.value; saveDraft(next, projects) }} /></label>
-                <label className="text-sm">Post link<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.postUrl} onChange={(event) => { const next = clone(profile); next.achievements[groupIndex].items[itemIndex].postUrl = event.target.value; saveDraft(next, projects) }} /></label>
-                <label className="text-sm">Certificate PDF or image<input type="file" accept="application/pdf,image/png,image/jpeg,image/webp" onChange={(event) => { const file = event.target.files?.[0]; if (file) void addAsset(file, 'public/certificates') }} /></label>
-              </div>
-            ))}
-          </fieldset>
-        ))}
+        {section === 'Achievements' && (() => {
+          const entries = profile.achievements.flatMap((group, groupIndex) => group.items.map((item, itemIndex) => ({ groupIndex, itemIndex, item, category: group.category })))
+          const current = entries[selectedAchievement]
+          if (!current) return null
+          const updateItem = (patch: Partial<typeof current.item>) => {
+            const next = clone(profile)
+            next.achievements[current.groupIndex].items[current.itemIndex] = { ...current.item, ...patch }
+            saveDraft(next, projects)
+          }
+          return (
+            <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+              <fieldset className="grid gap-3">
+                <legend className="font-serif text-3xl">Achievement</legend>
+                <label className="text-sm text-sage">Title<input className={field} value={current.item.title} onChange={(event) => updateItem({ title: event.target.value })} /></label>
+                <label className="text-sm text-sage">Result<input className={field} value={current.item.result} onChange={(event) => updateItem({ result: event.target.value })} /></label>
+                <label className="text-sm text-sage">Year<input className={field} value={current.item.year} onChange={(event) => updateItem({ year: event.target.value })} /></label>
+                <label className="text-sm text-sage">Description<textarea className={field} value={current.item.description} onChange={(event) => updateItem({ description: event.target.value })} /></label>
+                <label className="text-sm text-sage">Post link<input className={field} value={current.item.postUrl} onChange={(event) => updateItem({ postUrl: event.target.value })} /></label>
+                <label className="text-sm text-sage">Certificate PDF or image<input className="mt-1 block text-cream" type="file" accept="application/pdf,image/png,image/jpeg,image/webp" onChange={(event) => { const file = event.target.files?.[0]; if (!file) return; const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-'); updateItem({ credentialUrl: `/certificates/${safeName}` }); void addAsset(file, 'public/certificates') }} /></label>
+                <button type="button" className="w-fit text-sm" onClick={() => {
+                  const next = clone(profile)
+                  next.achievements[current.groupIndex].items.splice(current.itemIndex, 1)
+                  saveDraft(next, projects)
+                  setSelectedAchievement(0)
+                }}>Delete</button>
+              </fieldset>
+              <RecordRail title="Credentials" selected={selectedAchievement} onSelect={setSelectedAchievement} onCreate={() => {
+                const next = clone(profile)
+                const group = next.achievements[0] ?? { category: 'Recognition', items: [] }
+                if (!next.achievements[0]) next.achievements.push(group)
+                group.items.push({ title: 'New achievement', description: 'Describe the result in a sentence.', year: '', result: 'Result', featured: false, postUrl: '', credentialUrl: '' })
+                saveDraft(next, projects)
+                setSelectedAchievement(next.achievements.flatMap((entry) => entry.items).length - 1)
+              }} items={entries.map((entry) => ({ key: `${entry.category}-${entry.item.title}-${entry.itemIndex}`, label: entry.item.title, detail: entry.category }))} />
+            </div>
+          )
+        })()}
 
         {section === 'Skills' && Object.entries(profile.skills).map(([group, items]) => (
           <label key={group} className="block text-sm">{group}
-            <input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={items.join(', ')} onChange={(event) => {
+            <input className={field} value={items.join(', ')} onChange={(event) => {
               const next = clone(profile)
               next.skills[group] = event.target.value.split(',').map((item) => item.trim()).filter(Boolean)
               saveDraft(next, projects)
@@ -282,23 +363,41 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
           </label>
         ))}
 
-        {section === 'Leadership' && profile.leadership.map((item, index) => (
-          <fieldset key={item.organization} className="grid gap-2 rounded-3xl border border-white/10 p-4">
-            <label className="text-sm">Role<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.title} onChange={(event) => { const next = clone(profile); next.leadership[index].title = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Organization<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.organization} onChange={(event) => { const next = clone(profile); next.leadership[index].organization = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Period<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.period} onChange={(event) => { const next = clone(profile); next.leadership[index].period = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Summary<textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.summary} onChange={(event) => { const next = clone(profile); next.leadership[index].summary = event.target.value; saveDraft(next, projects) }} /></label>
-          </fieldset>
-        ))}
+        {section === 'Leadership' && profile.leadership[selectedLeadership] && (
+          <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+            <fieldset className="grid gap-3">
+              <legend className="font-serif text-3xl">Leadership</legend>
+              <label className="text-sm text-sage">Role<input className={field} value={profile.leadership[selectedLeadership].title} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].title = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Organization<input className={field} value={profile.leadership[selectedLeadership].organization} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].organization = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Period<input className={field} value={profile.leadership[selectedLeadership].period} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].period = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Summary<textarea className={field} value={profile.leadership[selectedLeadership].summary} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].summary = event.target.value; saveDraft(next, projects) }} /></label>
+            </fieldset>
+            <RecordRail title="Roles" selected={selectedLeadership} onSelect={setSelectedLeadership} onCreate={() => {
+              const next = clone(profile)
+              next.leadership.push({ title: 'New role', organization: 'Organization', period: '2026', context: 'Context', summary: 'Describe what this role involved.', skills: ['Communication'] })
+              saveDraft(next, projects)
+              setSelectedLeadership(next.leadership.length - 1)
+            }} items={profile.leadership.map((item, index) => ({ key: `${item.organization}-${index}`, label: item.title, detail: item.organization }))} />
+          </div>
+        )}
 
-        {section === 'Education' && profile.education.map((item, index) => (
-          <fieldset key={item.degree} className="grid gap-2 rounded-3xl border border-white/10 p-4">
-            <label className="text-sm">Degree<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.degree} onChange={(event) => { const next = clone(profile); next.education[index].degree = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Institution<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.institution} onChange={(event) => { const next = clone(profile); next.education[index].institution = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Period<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.period} onChange={(event) => { const next = clone(profile); next.education[index].period = event.target.value; saveDraft(next, projects) }} /></label>
-            <label className="text-sm">Score<input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2" value={item.cgpa} onChange={(event) => { const next = clone(profile); next.education[index].cgpa = event.target.value; saveDraft(next, projects) }} /></label>
-          </fieldset>
-        ))}
+        {section === 'Education' && profile.education[selectedEducation] && (
+          <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
+            <fieldset className="grid gap-3">
+              <legend className="font-serif text-3xl">Education</legend>
+              <label className="text-sm text-sage">Degree<input className={field} value={profile.education[selectedEducation].degree} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].degree = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Institution<input className={field} value={profile.education[selectedEducation].institution} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].institution = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Period<input className={field} value={profile.education[selectedEducation].period} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].period = event.target.value; saveDraft(next, projects) }} /></label>
+              <label className="text-sm text-sage">Score<input className={field} value={profile.education[selectedEducation].cgpa} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].cgpa = event.target.value; saveDraft(next, projects) }} /></label>
+            </fieldset>
+            <RecordRail title="Schools" selected={selectedEducation} onSelect={setSelectedEducation} onCreate={() => {
+              const next = clone(profile)
+              next.education.push({ degree: 'New degree', institution: 'Institution', period: '2026 – 2028', description: 'Describe the focus of this program.', cgpa: '', status: 'completed' })
+              saveDraft(next, projects)
+              setSelectedEducation(next.education.length - 1)
+            }} items={profile.education.map((item, index) => ({ key: `${item.degree}-${index}`, label: item.degree, detail: item.institution }))} />
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
           <button type="button" disabled={issues.length > 0} className="rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink disabled:opacity-40" onClick={() => setConfirming(true)}>Review and publish</button>
