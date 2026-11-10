@@ -6,27 +6,27 @@
     "company": "Worktual",
     "context": "Professional",
     "employer": "Worktual",
-    "description": "A retrieval layer that lets chatbots answer from a customer’s own documents instead of only the model’s general knowledge.",
-    "problem": "Each customer has different policies, product notes, and FAQs, so one shared prompt cannot stay accurate.",
-    "contribution": "I worked on the ingestion and retrieval path: preparing documents, indexing them, and making relevant passages available to chatbot applications.",
-    "ownership": "collaborative",
-    "ownershipLabel": "Collaborative retrieval work",
-    "businessValue": "Customers can keep separate knowledge bases, and the same retrieval layer can serve more than one AI application.",
+    "description": "A multi-tenant retrieval engine that prepares documents and returns the right passages to chatbots and agents.",
+    "problem": "Each organization has its own policies, product notes, and FAQs, so one shared prompt cannot stay accurate.",
+    "contribution": "I architected the ingestion pipeline and the Meilisearch retrieval APIs: file-type detection, text extraction, chunking, tenant collections, and filtered search.",
+    "ownership": "independent",
+    "ownershipLabel": "Architected the retrieval system",
+    "businessValue": "Each organization keeps an isolated knowledge collection, and the same retrieval layer can ground chatbots and agents.",
     "introFocus": "The useful idea is tenant-aware retrieval: the answer comes from that organization’s documents, not from whatever the model happens to remember.",
     "architecture": [
-      "Collect documents",
-      "Clean and chunk text",
-      "Embed and index passages",
-      "Retrieve for the right customer",
-      "Give that context to the model"
+      "Detect the file type",
+      "Extract text from PDF, DOCX, TXT, and Excel",
+      "Split text into retrieval-ready chunks",
+      "Store chunks in a tenant collection",
+      "Retrieve with filters and pass the context on"
     ],
-    "chatDetail": "The workflow accepts knowledge documents, extracts and chunks text, creates embeddings, and stores passages with metadata for search. Retrieval uses similarity search, including vector-index experiments, and can filter by metadata before the passages go to the model. I worked on retrieval quality and on making that layer usable by the chatbot applications. This is separate from my public RagChat learning project.",
+    "chatDetail": "The ingestion pipeline detects the file type, extracts text from PDF, DOCX, TXT, and Excel files, and splits that text into chunks. Chunks live in tenant-level collections so each organization's data stays isolated. That layer currently serves 12 to 14 tenants. Retrieval APIs use Meilisearch with metadata filters and faceted search, and typical retrieval is about 10 to 20 milliseconds. The retrieved context is then supplied to chatbots and LLM agents. This is separate from my public RagChat learning project and from my personal Instagram chatbot. I do not publish the employer implementation.",
     "image": "/images/projects/rag-chat.svg",
     "technologies": [
       "Python",
       "FastAPI",
-      "Embeddings",
-      "Vector search"
+      "Meilisearch",
+      "Embeddings"
     ],
     "workflow": [
       "Ingest",
@@ -41,7 +41,7 @@
       "Chunking and metadata",
       "Reusable retrieval for chatbots"
     ],
-    "safeguards": "This is collaborative product work. I do not publish the employer implementation or claim I built the whole platform alone.",
+    "safeguards": "I architected this retrieval system. I do not publish the employer implementation or name customers.",
     "planned": [],
     "aliases": [
       "rag",
@@ -73,9 +73,9 @@
     "employer": "Worktual",
     "description": "One conversational backend behind website chat, Facebook Messenger, and Instagram, instead of a separate bot for every channel.",
     "problem": "Customers arrive on different channels, but the business still needs one consistent answer.",
-    "contribution": "I worked on the conversational backend and channel integration, connecting incoming messages with the model and the retrieval layer.",
+    "contribution": "I developed custom chatbots for websites, Facebook, and Instagram with the team, including prompts, retrieval grounding, tool calling, and handoffs that keep the chat context.",
     "ownership": "collaborative",
-    "ownershipLabel": "Collaborative channel integration",
+    "ownershipLabel": "Shared chatbot product",
     "businessValue": "The same intelligence can answer on the website, Messenger, and Instagram without rebuilding the bot for each platform.",
     "introFocus": "The useful idea is one conversational backend: website, Messenger, and Instagram can share the same understanding instead of three separate bots.",
     "architecture": [
@@ -85,7 +85,7 @@
       "Generate a reply",
       "Send it back on the same channel"
     ],
-    "chatDetail": "A message arrives by webhook from the website widget, Facebook Messenger, or Instagram. The backend identifies the conversation, optionally retrieves from the customer knowledge base, asks the model for a grounded reply, and returns it through the original channel. I contributed to that flow and the channel integration. It is team-owned product work, not my public RagChat demo.",
+    "chatDetail": "These are custom chatbots for websites, Facebook, and Instagram, used by healthcare, jewellery, and fitness clients. I do not name those clients. Each client has its own system prompt and business rules. Answers are grounded in that client's knowledge base through the retrieval system. Tool calling covers lead capture, appointment booking, and support tickets, so the agent can carry out the operation. Intent routing and Sales-to-Service handoffs keep the full chat context. This is shared product work, not my personal Instagram LangChain bot and not RagChat.",
     "image": "/images/projects/rag-chat.svg",
     "technologies": [
       "Python",
@@ -111,8 +111,8 @@
       "chatbot",
       "chatbots",
       "messenger",
-      "instagram",
       "facebook",
+      "omnichannel",
       "channel",
       "conversation",
       "webhook"
@@ -148,7 +148,7 @@
       "Write idempotent graph updates",
       "Embed eligible nodes separately"
     ],
-    "chatDetail": "PostgreSQL remains the system of record. Change events move through a CDC stream into a Python router. YAML mappings describe how tables become graph nodes and relationships, and Cypher MERGE writes are idempotent so replays do not duplicate them. Each organization gets its own graph database. Embeddings run in a separate worker so model work does not block event processing. The pipeline also covers provisioning, indexes, quarantined events, and reconciliation. I built that Python pipeline. The ontology and graph model were designed collaboratively, so I do not claim the whole knowledge platform alone.",
+    "chatDetail": "I independently built a Python CDC pipeline using PostgreSQL, Debezium, and Kafka. YAML mappings keep a separate Neo4j graph up to date for each organization. The pipeline routes by tenant, writes idempotent graph updates, supports backfill, and sends failed events to a dead-letter queue. I also contributed to the enterprise ontology. The ontology design was collaborative, so I do not claim the whole knowledge platform alone.",
     "image": "/images/projects/semantic-layer.svg",
     "technologies": [
       "Python",
@@ -200,7 +200,7 @@
     "context": "Professional",
     "employer": "Worktual",
     "description": "A business-meaning layer that lets people ask analytics questions without writing SQL or Cypher.",
-    "problem": "The product data spans hundreds of tables. A model cannot reliably guess what a missed call, a team, or a date window means.",
+    "problem": "The product data spans about 800 tables. A model cannot reliably guess what a missed call, a team, or a date window means.",
     "contribution": "I designed and developed the Cypher Agent: schema exploration, iterative query generation, execution, and rolling conversation context. A colleague designed the SQL Agent. The wider multi-agent architecture was collaborative.",
     "ownership": "mixed",
     "ownershipLabel": "Cypher Agent mine, SQL Agent a colleague’s",
@@ -213,7 +213,7 @@
       "Generate Cypher or SQL",
       "Explain the result"
     ],
-    "chatDetail": "A coordinating agent routes a natural-language question to a domain agent. That agent uses the semantic layer for definitions, metrics, dimensions, and database mappings, then an executor writes and runs the query. I owned the Cypher Agent: it inspects the graph schema, drafts a query, runs it, checks whether the result is enough, and refines it. I also worked on rolling context summaries for longer conversations and on connecting ontology context to that reasoning. A colleague owned the SQL Agent. The platform was discussed across a large shared schema, on the order of hundreds of tables, which is why controlled definitions matter. I do not claim I built the entire analytics platform.",
+    "chatDetail": "I co-designed a three-layer platform: a Super Agent, domain agents, and SQL and Cypher executors. It answers business questions across products and about 800 database tables. I engineered the Cypher agent independently. It writes and runs Neo4j queries and chooses the next relationship to explore for related data and possible causes. Rolling context summarization keeps long graph investigations inside the model context limit. A colleague owned the SQL Agent. I do not claim I built the entire analytics platform.",
     "image": "/images/projects/semantic-layer.svg",
     "technologies": [
       "Python",
@@ -278,7 +278,7 @@
       "Delegate through a team or orchestrator",
       "Import external MCP tools"
     ],
-    "chatDetail": "The kit models an LLM, an agent, a team, and an orchestrator. Tools pass through optional hooks, schema validation, execution, and a result returned to the model. Skills hold instructions that can be loaded when needed. Memory can be in-process or stored in PostgreSQL, with message history and summaries. A session manager keeps the runnable conversation by session id. An MCP client turns remote tools into the same local tool interface. I contributed to this framework with the team. I do not present it as a solo library.",
+    "chatDetail": "I co-built a reusable Python framework for agents, teams, and multi-level orchestration, with handoffs that keep context. Tool calls use Pydantic input validation. Skills load on demand. Session memory can be stored in PostgreSQL. An MCP client lets agents use tools from remote MCP servers. This was collaborative framework work, not a solo library.",
     "image": "/images/projects/semantic-layer.svg",
     "technologies": [
       "Python",
@@ -342,7 +342,7 @@
       "Validate the shape",
       "Regenerate invalid samples"
     ],
-    "chatDetail": "The pipeline defines scenarios, sends generation instructions to model providers, checks the JSON structure, and regenerates incomplete samples. A collaborative batch discussed with a teammate was on the order of 26,000 structured samples. That scale was a two-person effort, not my individual output. Provider discussions included Gemini and NVIDIA-hosted models. I do not claim I produced that dataset alone.",
+    "chatDetail": "With one teammate, I designed a scenario-based pipeline using Gemini and NVIDIA APIs. It generated about 26,000 conversation samples with tool calls for fine-tuning and product testing. An LLM-as-a-judge layer and human review checked the samples. I also contributed to a schema-driven generator that creates relational test data with valid primary, foreign, and cross-schema keys. The 26,000 samples were a two-person effort, not a solo metric.",
     "image": "/images/projects/rag-chat.svg",
     "technologies": [
       "Python",
@@ -391,7 +391,7 @@
     "employer": "Worktual",
     "description": "A cleaner ticketing agent, with duplicate tools removed and instructions split into skills.",
     "problem": "As tools accumulated, the agent prompt grew noisy and some capabilities overlapped or were missing.",
-    "contribution": "I reviewed the tool list, removed duplicates, found gaps, and reorganized prompts into modular skills.",
+    "contribution": "I took ownership of an existing ticketing agent with a colleague: removed duplicate tools, added missing ones, restructured prompts, and moved critical steps into deterministic backend tools.",
     "ownership": "collaborative",
     "ownershipLabel": "Collaborative agent improvement",
     "businessValue": "The agent loads the instructions it needs, so the main prompt does not have to contain every ticket action.",
@@ -402,7 +402,7 @@
       "Add missing capabilities",
       "Load the relevant skill"
     ],
-    "chatDetail": "I reviewed the ticketing agent’s tools and instructions, removed duplicate tools, identified missing capabilities, and grouped behavior into skills such as creating a ticket, checking status, assigning it, and updating it. The relevant skill can be supplied when the task needs it. This was an improvement to a shared agent, not a product I built alone.",
+    "chatDetail": "I took over an existing ticketing agent with a colleague. We removed duplicate tools, added missing ones, and restructured the prompts. I added modular skills and moved critical steps into deterministic backend tools, which reduced the context size and made the agent more reliable. This was an improvement to a shared agent, not a product I built alone.",
     "image": "/images/projects/semantic-layer.svg",
     "technologies": [
       "Python",
@@ -690,6 +690,65 @@
     "visibility": "module",
     "parentId": "seo-content-platform",
     "visualType": "automation"
+  },
+  {
+    "id": "instagram-chatbot",
+    "title": "Instagram AI Chatbot",
+    "shortName": "Instagram Bot",
+    "company": "Personal",
+    "context": "Personal",
+    "employer": "",
+    "description": "A personal Instagram DM bot that replies with an LLM through LangChain and a FastAPI webhook.",
+    "problem": "Rule-based Instagram replies could not answer the range of messages people actually send.",
+    "contribution": "I built the FastAPI webhook, connected it to the official Meta Instagram API, and moved replies from rules to LangChain-generated responses.",
+    "ownership": "independent",
+    "ownershipLabel": "Personal project",
+    "businessValue": "Direct messages get a relevant generated reply instead of a fixed script.",
+    "introFocus": "This is my personal Instagram DM bot. It is not the Worktual multi-channel chatbot product.",
+    "architecture": [
+      "Receive an Instagram webhook",
+      "Pass the message through a LangChain prompt",
+      "Generate a reply",
+      "Send it back through the Meta API"
+    ],
+    "chatDetail": "I built a personal Instagram DM chatbot. A FastAPI webhook receives messages from the official Meta Instagram API. LangChain prompts and chains turn the incoming message into a reply. I deployed the webhook on Render and upgraded the bot from rule-based replies to LLM-generated replies. This is separate from the Worktual website, Facebook, and Instagram product chatbots.",
+    "image": "/images/projects/rag-chat.svg",
+    "technologies": [
+      "Python",
+      "FastAPI",
+      "LangChain",
+      "Meta Instagram API"
+    ],
+    "workflow": [
+      "Webhook",
+      "Prompt",
+      "Reply"
+    ],
+    "modules": [],
+    "features": [
+      "Official Instagram webhook",
+      "LangChain replies",
+      "Render deployment"
+    ],
+    "safeguards": "This is a personal project. It is not the Worktual contact-center chatbot.",
+    "planned": [],
+    "aliases": [
+      "instagram dm",
+      "instagram bot",
+      "instagram chatbot",
+      "langchain",
+      "render",
+      "personal instagram"
+    ],
+    "github": "",
+    "readmeUrl": "",
+    "workingUrl": "",
+    "category": "Conversational AI",
+    "isPublic": true,
+    "featured": false,
+    "status": "shipped",
+    "visibility": "personal",
+    "visualType": "conversation"
   },
   {
     "id": "rag-chat",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import SystemGlyph from '@/app/components/SystemGlyph'
 import { portfolioContentSchema, projectSchema, visualTypes, type SiteContent } from '@/lib/content-schema'
 
@@ -57,22 +57,95 @@ function blankProject(index: number): Project {
 }
 
 function RecordRail({ title, items, selected, onSelect, onCreate }: { title: string; items: { key: string; label: string; detail: string }[]; selected: number; onSelect: (index: number) => void; onCreate: () => void }) {
+  const [query, setQuery] = useState('')
+  const visible = items.flatMap((item, index) => {
+    const haystack = `${item.label} ${item.detail}`.toLowerCase()
+    return query.trim() && !haystack.includes(query.trim().toLowerCase()) ? [] : [{ ...item, index }]
+  })
   return (
-    <div className="rounded-[1.5rem] border border-white/15 p-3">
+    <div className="rounded-[1.5rem] border border-white/15 bg-black/20 p-3">
       <div className="flex items-center justify-between gap-2 px-1">
         <p className="text-xs uppercase tracking-[0.16em] text-sage">{title}</p>
         <button type="button" onClick={onCreate} className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-ink">New</button>
       </div>
+      <input className="mt-3 w-full rounded-xl border border-white/15 bg-black/30 px-3 py-2 text-sm text-cream outline-none focus:border-cream/50" value={query} placeholder="Search" onChange={(event) => setQuery(event.target.value)} />
       <div data-lenis-prevent className="mt-3 grid max-h-[28rem] gap-2 overflow-y-auto overscroll-contain">
-        {items.map((item, index) => (
-          <button key={item.key} type="button" onClick={() => onSelect(index)} className={`rounded-2xl border px-3 py-2 text-left ${index === selected ? 'border-cream bg-cream text-ink' : 'border-white/15 text-cream hover:border-cream/40'}`}>
+        {visible.map((item) => (
+          <button key={item.key} type="button" onClick={() => onSelect(item.index)} className={`rounded-2xl border px-3 py-2 text-left ${item.index === selected ? 'border-cream bg-cream text-ink' : 'border-white/15 text-cream hover:border-cream/40'}`}>
             <span className="block text-sm font-semibold">{item.label}</span>
-            <span className={`block truncate text-xs ${index === selected ? 'text-ink/70' : 'text-cream/60'}`}>{item.detail}</span>
+            <span className={`block truncate text-xs ${item.index === selected ? 'text-ink/70' : 'text-cream/60'}`}>{item.detail}</span>
           </button>
         ))}
+        {visible.length === 0 && <p className="px-2 py-3 text-sm text-cream/60">No matches.</p>}
       </div>
     </div>
   )
+}
+
+const panel = 'grid gap-3 rounded-[1.8rem] border border-white/10 bg-black/20 p-5'
+
+function FilePick({ label, accept, hint, current, onFile }: { label: string; accept: string; hint: string; current?: string; onFile: (file: File) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [picked, setPicked] = useState<{ name: string; url: string; kind: 'image' | 'pdf' } | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (picked?.url.startsWith('blob:')) URL.revokeObjectURL(picked.url)
+    }
+  }, [picked])
+
+  const preview = picked?.url || current || ''
+  const kind = picked?.kind || (/\.pdf($|\?)/i.test(preview) ? 'pdf' : /\.(png|jpe?g|webp|svg|gif)($|\?)/i.test(preview) ? 'image' : '')
+  const name = picked?.name || (current ? decodeURIComponent(current.split('/').pop() || '') : '')
+
+  const take = (file: File | undefined) => {
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    setPicked({ name: file.name, url, kind: file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf') ? 'pdf' : 'image' })
+    onFile(file)
+  }
+
+  return (
+    <div>
+      <p className="text-sm text-sage">{label}</p>
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault()
+          take(event.dataTransfer.files?.[0])
+        }}
+        className="mt-1 flex w-full items-center gap-3 rounded-xl border border-dashed border-cream/40 bg-black/30 px-3 py-3 text-left transition hover:border-cream"
+      >
+        {kind === 'image' && preview ? (
+          <img src={preview} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
+        ) : (
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-white/15 text-[10px] uppercase tracking-[0.14em] text-sage">{kind === 'pdf' ? 'PDF' : 'File'}</span>
+        )}
+        <span className="min-w-0">
+          <span className="block truncate text-sm text-cream">{name || hint}</span>
+          <span className="mt-1 block text-xs text-sage">{name ? 'Click or drop a replacement' : 'Click or drop a file'}</span>
+        </span>
+      </button>
+      {kind === 'pdf' && preview && <iframe title={name || 'PDF preview'} src={preview} className="mt-2 h-56 w-full rounded-xl border border-white/10 bg-white" />}
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        style={{ display: 'none' }}
+        onChange={(event) => {
+          const file = event.target.files?.[0]
+          event.target.value = ''
+          take(file)
+        }}
+      />
+    </div>
+  )
+}
+
+function safeFileName(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-|-$/g, '')
 }
 
 export default function StudioEditor({ initialProfile, initialProjects }: { initialProfile: Profile; initialProjects: Project[] }) {
@@ -148,15 +221,21 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
     return next
   }
 
-  const addAsset = async (file: File, folder: string) => {
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-|-$/g, '')
+  const readAsset = async (file: File, folder: string) => {
+    const safeName = safeFileName(file.name)
     const path = `${folder}/${safeName}`
     const content = await file.arrayBuffer()
     const bytes = new Uint8Array(content)
     let binary = ''
     bytes.forEach((byte) => { binary += String.fromCharCode(byte) })
-    saveDraft(profile, projects, [...assets.filter((asset) => asset.path !== path), { path, content: btoa(binary), mime: file.type }])
+    return { asset: { path, content: btoa(binary), mime: file.type } satisfies Asset, publicPath: `/${folder.replace(/^public\//, '')}/${safeName}` }
   }
+
+  const saveWithAsset = (nextProfile: Profile, nextProjects: Project[], asset: Asset) => {
+    saveDraft(nextProfile, nextProjects, [...assets.filter((item) => item.path !== asset.path), asset])
+  }
+
+  const askDelete = (label: string) => window.confirm(`Delete ${label}? The change stays in this browser until you publish.`)
 
   const publish = async () => {
     setStatus('Publishing to GitHub…')
@@ -195,32 +274,56 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
         )}
 
         {section === 'Profile' && (
-          <fieldset className="grid gap-3">
+          <fieldset className={panel}>
             <legend className="font-serif text-3xl">Profile and contact</legend>
-            {(['name', 'title', 'role', 'location', 'email', 'phone', 'tagline', 'description'] as const).map((field) => (
-              <label key={field} className="text-sm capitalize text-sage">
-                {field}
-                <input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-cream" value={field in profile.personal ? profile.personal[field] : profile.contact[field as 'email']} onChange={(event) => {
-                  const next = clone(profile)
-                  if (field in next.personal) next.personal[field] = event.target.value
-                  if (field in next.contact) next.contact[field as 'email'] = event.target.value
-                  saveDraft(next, projects)
-                }} />
+            <FilePick label="Profile image" hint="Add a profile photo" accept="image/png,image/jpeg,image/webp" current={profile.personal.avatar} onFile={(file) => {
+              void readAsset(file, 'public/images').then(({ asset, publicPath }) => {
+                const next = clone(profile)
+                next.personal.avatar = publicPath
+                saveWithAsset(next, projects, asset)
+              })
+            }} />
+            {(['name', 'title', 'role', 'location', 'email', 'phone', 'tagline', 'description'] as const).map((key) => (
+              <label key={key} className="text-sm capitalize text-sage">
+                {key}
+                {key === 'tagline' || key === 'description' ? (
+                  <textarea className={field} value={profile.personal[key]} onChange={(event) => {
+                    const next = clone(profile)
+                    next.personal[key] = event.target.value
+                    saveDraft(next, projects)
+                  }} />
+                ) : (
+                  <input className={field} value={key in profile.personal ? profile.personal[key] : profile.contact[key as 'email']} onChange={(event) => {
+                    const next = clone(profile)
+                    if (key in next.personal) next.personal[key] = event.target.value
+                    if (key in next.contact) next.contact[key as 'email'] = event.target.value
+                    saveDraft(next, projects)
+                  }} />
+                )}
               </label>
             ))}
             <label className="text-sm text-sage">Availability
-              <input className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-cream" value={profile.contact.availability} onChange={(event) => { const next = clone(profile); next.contact.availability = event.target.value; saveDraft(next, projects) }} />
+              <input className={field} value={profile.contact.availability} onChange={(event) => { const next = clone(profile); next.contact.availability = event.target.value; saveDraft(next, projects) }} />
             </label>
-            <label className="text-sm text-sage">Resume PDF
-              <input className="mt-1 block" type="file" accept="application/pdf" onChange={(event) => { const file = event.target.files?.[0]; if (file) void addAsset(file, 'public/resume') }} />
-            </label>
+            {(['github', 'linkedin', 'leetcode', 'codechef'] as const).map((key) => (
+              <label key={key} className="text-sm capitalize text-sage">{key}
+                <input className={field} value={profile.social[key]} onChange={(event) => { const next = clone(profile); next.social[key] = event.target.value; saveDraft(next, projects) }} />
+              </label>
+            ))}
+            <FilePick label="Resume PDF" hint="Add the resume PDF" accept="application/pdf" current={profile.personal.resume} onFile={(file) => {
+              void readAsset(file, 'public/resume').then(({ asset, publicPath }) => {
+                const next = clone(profile)
+                next.personal.resume = publicPath
+                saveWithAsset(next, projects, asset)
+              })
+            }} />
           </fieldset>
         )}
 
         {section === 'Experience' && profile.experience[selectedExperience] && (
           <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-            <fieldset className="grid gap-3">
-              <legend className="font-serif text-3xl">Experience</legend>
+            <fieldset className={panel}>
+              <legend className="font-serif text-3xl">{profile.experience[selectedExperience].company}</legend>
               <label className="text-sm text-sage">Role<input className={field} value={profile.experience[selectedExperience].title} onChange={(event) => updateExperience(selectedExperience, { title: event.target.value })} /></label>
               <label className="text-sm text-sage">Employer<input className={field} value={profile.experience[selectedExperience].company} onChange={(event) => updateExperience(selectedExperience, { company: event.target.value })} /></label>
               <label className="text-sm text-sage">Dates<input className={field} value={profile.experience[selectedExperience].period} onChange={(event) => updateExperience(selectedExperience, { period: event.target.value })} /></label>
@@ -232,7 +335,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
               <div className="flex gap-2 text-sm">
                 <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, selectedExperience, -1); saveDraft(next, projects); setSelectedExperience(Math.max(0, selectedExperience - 1)) }}>Move up</button>
                 <button type="button" onClick={() => { const next = clone(profile); next.experience = move(next.experience, selectedExperience, 1); saveDraft(next, projects); setSelectedExperience(Math.min(profile.experience.length - 1, selectedExperience + 1)) }}>Move down</button>
-                <button type="button" onClick={() => { if (profile.experience.length < 2) return; const next = clone(profile); next.experience.splice(selectedExperience, 1); saveDraft(next, projects); setSelectedExperience(0) }}>Delete</button>
+                <button type="button" onClick={() => { if (profile.experience.length < 2 || !askDelete(profile.experience[selectedExperience].company)) return; const next = clone(profile); next.experience.splice(selectedExperience, 1); saveDraft(next, projects); setSelectedExperience(0) }}>Delete</button>
               </div>
             </fieldset>
             <RecordRail title="Roles" selected={selectedExperience} onSelect={setSelectedExperience} onCreate={() => {
@@ -246,20 +349,44 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
 
         {section === 'Projects' && project && (
           <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-            <fieldset className="grid gap-3">
-              <legend className="font-serif text-3xl">Project</legend>
+            <fieldset className={panel}>
+              <legend className="font-serif text-3xl">{project.shortName}</legend>
               {([
                 ['title', 'Title'], ['shortName', 'Short name'], ['problem', 'Problem'], ['contribution', 'Your contribution'],
                 ['ownershipLabel', 'Ownership label'], ['businessValue', 'Value'], ['chatDetail', 'Chat detail'],
-              ] as const).map(([field, label]) => (
-                <label key={field} className="text-sm">{label}
-                  <textarea className="mt-1 w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2 text-cream" value={project[field]} onChange={(event) => {
+              ] as const).map(([key, label]) => (
+                <label key={key} className="text-sm text-sage">{label}
+                  <textarea className={field} value={project[key]} onChange={(event) => {
                     const next = clone(projects)
-                    next[selectedProject] = { ...next[selectedProject], [field]: event.target.value }
+                    next[selectedProject] = { ...next[selectedProject], [key]: event.target.value }
                     saveDraft(profile, next)
                   }} />
                 </label>
               ))}
+              <label className="text-sm text-sage">Company
+                <select className={field} value={project.company} onChange={(event) => {
+                  const company = event.target.value as Project['company']
+                  const next = clone(projects)
+                  next[selectedProject] = { ...next[selectedProject], company, context: company === 'Personal' ? 'Personal' : 'Professional', employer: company === 'Personal' ? '' : company }
+                  saveDraft(profile, next)
+                }}>
+                  <option value="Worktual">Worktual</option>
+                  <option value="Webfosys">Webfosys</option>
+                  <option value="Personal">Personal</option>
+                </select>
+              </label>
+              <label className="text-sm text-sage">Status<input className={field} value={project.status} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], status: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">GitHub link<input className={field} value={project.github} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], github: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Technologies, comma separated<input className={field} value={project.technologies.join(', ')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Architecture, one step per line<textarea className={`${field} min-h-24`} value={project.architecture.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], architecture: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Workflow, one step per line<textarea className={`${field} min-h-24`} value={project.workflow.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], workflow: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
+              <FilePick key={project.id} label="Project image" hint="Add a project image" accept="image/png,image/jpeg,image/webp,image/svg+xml" current={project.image} onFile={(file) => {
+                void readAsset(file, 'public/images/projects').then(({ asset, publicPath }) => {
+                  const next = clone(projects)
+                  next[selectedProject] = { ...next[selectedProject], image: publicPath }
+                  saveWithAsset(profile, next, asset)
+                })
+              }} />
               <label className="text-sm">Ownership
                 <select className="mt-1 w-full rounded-xl border border-white/15 bg-[#2a0d0b] px-3 py-2 text-cream" value={project.ownership} onChange={(event) => {
                   const next = clone(projects)
@@ -291,7 +418,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, -1); saveDraft(profile, next); setSelectedProject(Math.max(0, selectedProject - 1)) }}>Move up</button>
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, 1); saveDraft(profile, next); setSelectedProject(Math.min(projects.length - 1, selectedProject + 1)) }}>Move down</button>
                 <button type="button" onClick={() => {
-                  if (projects.length < 2) return
+                  if (projects.length < 2 || !askDelete(project.shortName)) return
                   const next = projects.filter((_, index) => index !== selectedProject)
                   saveDraft(profile, next)
                   setSelectedProject(0)
@@ -306,7 +433,10 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
               }} items={projects.map((item) => ({ key: item.id, label: item.shortName, detail: item.title }))} />
             <div className="rounded-[1.8rem] border border-sage/35 bg-gradient-to-br from-[#3a1210] to-[#31372c] p-4">
               <p className="text-xs uppercase tracking-[0.16em] text-sage">Preview</p>
-              <div className="mt-3 h-24 overflow-hidden rounded-2xl"><SystemGlyph type={project.visualType} /></div>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="h-24 overflow-hidden rounded-2xl"><SystemGlyph type={project.visualType} /></div>
+                <img src={project.image} alt="" className="h-24 w-full rounded-2xl bg-black/20 object-cover" />
+              </div>
               <h2 className="mt-3 font-serif text-2xl">{project.title}</h2>
               <p className="mt-2 text-sm text-white/80">{project.problem}</p>
               <p className="mt-3 text-sm text-cream">{project.contribution}</p>
@@ -326,15 +456,22 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
           }
           return (
             <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-              <fieldset className="grid gap-3">
-                <legend className="font-serif text-3xl">Achievement</legend>
+              <fieldset className={panel}>
+                <legend className="font-serif text-3xl">{current.item.title}</legend>
                 <label className="text-sm text-sage">Title<input className={field} value={current.item.title} onChange={(event) => updateItem({ title: event.target.value })} /></label>
                 <label className="text-sm text-sage">Result<input className={field} value={current.item.result} onChange={(event) => updateItem({ result: event.target.value })} /></label>
                 <label className="text-sm text-sage">Year<input className={field} value={current.item.year} onChange={(event) => updateItem({ year: event.target.value })} /></label>
                 <label className="text-sm text-sage">Description<textarea className={field} value={current.item.description} onChange={(event) => updateItem({ description: event.target.value })} /></label>
                 <label className="text-sm text-sage">Post link<input className={field} value={current.item.postUrl} onChange={(event) => updateItem({ postUrl: event.target.value })} /></label>
-                <label className="text-sm text-sage">Certificate PDF or image<input className="mt-1 block text-cream" type="file" accept="application/pdf,image/png,image/jpeg,image/webp" onChange={(event) => { const file = event.target.files?.[0]; if (!file) return; const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-'); updateItem({ credentialUrl: `/certificates/${safeName}` }); void addAsset(file, 'public/certificates') }} /></label>
+                <FilePick key={`${current.groupIndex}-${current.itemIndex}`} label="Certificate" hint="Add a certificate PDF or image" accept="application/pdf,image/png,image/jpeg,image/webp" current={current.item.credentialUrl} onFile={(file) => {
+                  void readAsset(file, 'public/certificates').then(({ asset, publicPath }) => {
+                    const next = clone(profile)
+                    next.achievements[current.groupIndex].items[current.itemIndex] = { ...current.item, credentialUrl: publicPath }
+                    saveWithAsset(next, projects, asset)
+                  })
+                }} />
                 <button type="button" className="w-fit text-sm" onClick={() => {
+                  if (!askDelete(current.item.title)) return
                   const next = clone(profile)
                   next.achievements[current.groupIndex].items.splice(current.itemIndex, 1)
                   saveDraft(next, projects)
@@ -353,20 +490,32 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
           )
         })()}
 
-        {section === 'Skills' && Object.entries(profile.skills).map(([group, items]) => (
-          <label key={group} className="block text-sm">{group}
-            <input className={field} value={items.join(', ')} onChange={(event) => {
+        {section === 'Skills' && (
+          <fieldset className={panel}>
+            <legend className="font-serif text-3xl">Skills</legend>
+            {Object.entries(profile.skills).map(([group, items]) => (
+              <label key={group} className="block text-sm text-sage">{group}
+                <input className={field} value={items.join(', ')} onChange={(event) => {
+                  const next = clone(profile)
+                  next.skills[group] = event.target.value.split(',').map((item) => item.trim()).filter(Boolean)
+                  saveDraft(next, projects)
+                }} />
+              </label>
+            ))}
+            <button type="button" className="w-fit rounded-full bg-cream px-3 py-1 text-xs font-semibold text-ink" onClick={() => {
+              const name = window.prompt('Skill group name')?.trim()
+              if (!name || profile.skills[name]) return
               const next = clone(profile)
-              next.skills[group] = event.target.value.split(',').map((item) => item.trim()).filter(Boolean)
+              next.skills[name] = ['New skill']
               saveDraft(next, projects)
-            }} />
-          </label>
-        ))}
+            }}>New group</button>
+          </fieldset>
+        )}
 
         {section === 'Leadership' && profile.leadership[selectedLeadership] && (
           <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-            <fieldset className="grid gap-3">
-              <legend className="font-serif text-3xl">Leadership</legend>
+            <fieldset className={panel}>
+              <legend className="font-serif text-3xl">{profile.leadership[selectedLeadership].title}</legend>
               <label className="text-sm text-sage">Role<input className={field} value={profile.leadership[selectedLeadership].title} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].title = event.target.value; saveDraft(next, projects) }} /></label>
               <label className="text-sm text-sage">Organization<input className={field} value={profile.leadership[selectedLeadership].organization} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].organization = event.target.value; saveDraft(next, projects) }} /></label>
               <label className="text-sm text-sage">Period<input className={field} value={profile.leadership[selectedLeadership].period} onChange={(event) => { const next = clone(profile); next.leadership[selectedLeadership].period = event.target.value; saveDraft(next, projects) }} /></label>
@@ -383,8 +532,8 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
 
         {section === 'Education' && profile.education[selectedEducation] && (
           <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-            <fieldset className="grid gap-3">
-              <legend className="font-serif text-3xl">Education</legend>
+            <fieldset className={panel}>
+              <legend className="font-serif text-3xl">{profile.education[selectedEducation].degree}</legend>
               <label className="text-sm text-sage">Degree<input className={field} value={profile.education[selectedEducation].degree} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].degree = event.target.value; saveDraft(next, projects) }} /></label>
               <label className="text-sm text-sage">Institution<input className={field} value={profile.education[selectedEducation].institution} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].institution = event.target.value; saveDraft(next, projects) }} /></label>
               <label className="text-sm text-sage">Period<input className={field} value={profile.education[selectedEducation].period} onChange={(event) => { const next = clone(profile); next.education[selectedEducation].period = event.target.value; saveDraft(next, projects) }} /></label>
@@ -392,7 +541,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
             </fieldset>
             <RecordRail title="Schools" selected={selectedEducation} onSelect={setSelectedEducation} onCreate={() => {
               const next = clone(profile)
-              next.education.push({ degree: 'New degree', institution: 'Institution', period: '2026 – 2028', description: 'Describe the focus of this program.', cgpa: '', status: 'completed' })
+              next.education.push({ degree: 'New degree', institution: 'Institution', period: '2026 – 2028', description: 'Describe the focus of this program.', cgpa: '0.0', status: 'completed' })
               saveDraft(next, projects)
               setSelectedEducation(next.education.length - 1)
             }} items={profile.education.map((item, index) => ({ key: `${item.degree}-${index}`, label: item.degree, detail: item.institution }))} />

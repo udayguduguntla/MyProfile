@@ -1,6 +1,7 @@
 import { fallbackArticles } from '@/data/articles'
 import { portfolioData } from '@/data/portfolio'
 import { portfolioProjects, projectById, type PortfolioProject } from '@/data/projects'
+import { answerFromPassages } from '@/lib/portfolio-knowledge'
 
 export type Intent = 'me' | 'projects' | 'experience' | 'skills' | 'education' | 'achievements' | 'leadership' | 'articles' | 'contact' | 'general'
 
@@ -11,7 +12,7 @@ export function detectIntent(query: string): Intent {
   if (/(contact|email|phone|linkedin|github profile|hire|reach)/.test(text)) return 'contact'
   if (/(article|medium|writing|blog)/.test(text)) return 'articles'
   if (/(achievement|award|hackathon|certification|certificate|rank|prize|codevita|aincat|nexus)/.test(text)) return 'achievements'
-  if (/(education|college|degree|university|cgpa|mca|bachelor)/.test(text)) return 'education'
+  if (/(education|college|degree|university|cgpa|mca|bachelor|b\.?sc|statistics|vivekananda|narayana|studied|study)/.test(text)) return 'education'
   if (/(skill|stack|technolog)/.test(text) && !followUp.test(text)) return 'skills'
   if (/(codetantra|teaching|trainer|leadership|public speaking)/.test(text)) return 'leadership'
   if (matchProject(query)) return 'projects'
@@ -90,17 +91,17 @@ export function fallbackAnswer(intent: Intent, query = '', activeId?: string | n
   const featured = portfolioProjects.filter((item) => item.visibility === 'featured')
   switch (intent) {
     case 'me':
-      return `I'm Uday Guduguntla, an AI engineer in ${portfolioData.personal.location}. At Worktual I work on retrieval, chatbots, the CDC graph pipeline, and the Cypher Agent. Before that I built Webfosys' publishing, quality-check, and search-reporting tools.`
-    case 'projects':
-      return `The work I can walk through is ${featured.map((item) => item.shortName).join(', ')}, plus the Webfosys publishing, quality, and search modules. Ask about one and I will stay on it.`
+    return `I'm Uday Guduguntla, an AI engineer in ${portfolioData.personal.location}. I have 2+ years of Python experience, including 1+ year on generative AI. At Worktual I architected the multi-tenant RAG system, the CDC pipeline, and the Cypher agent. Before that I built Webfosys' publishing, quality-check, and search-reporting tools.`
+  case 'projects':
+      return `The work I can walk through is ${featured.map((item) => item.shortName).join(', ')}, plus the Webfosys publishing, quality, and search modules, and a personal Instagram bot. Ask about one and I will stay on it.`
     case 'skills':
       return `Python is the through-line: retrieval and agents at Worktual, and FastAPI, WordPress, and Search Console at Webfosys. The interface work uses React and Next.js.`
     case 'experience':
-      return `I am a Trainee Software Engineer in Python at Worktual. I built the CDC pipeline and the Cypher Agent, and I contributed to retrieval, chatbots, and the agent kit. At Webfosys I implemented the SEO publishing, review, and reporting workflows. ZenX was a separate client assignment.`
+      return `I am a Trainee Software Engineer in Python at Worktual. I architected the multi-tenant RAG system, the CDC pipeline, and the Cypher agent. Chatbots, the agent kit, ticketing, and synthetic data were shared work. At Webfosys, from June 2024 to September 2025, I implemented the SEO publishing, review, and reporting workflows. ZenX was a Webfosys partnership, not a separate employer.`
     case 'leadership':
-      return `From February to July 2025 I taught Python through CodeTantra, a college-linked internship. I count that as communication experience, not my core engineering role.`
+      return `From February to July 2025 I trained 1,000+ students in Python, C, and data structures through CodeTantra, a college-linked internship. I also led trainer teams and a 70+ student web workshop. I count that as teaching experience, not my core engineering role.`
     case 'education':
-      return `I completed an MCA at Narayana Engineering College with a CGPA of 9.0, and a B.Sc at Vikrama Simhapuri University with a CGPA of 9.2.`
+      return `I completed an MCA at Narayana Engineering College, Nellore, with a CGPA of 8.8, and a B.Sc. in Statistics at Vivekananda Degree College, Nellore, with a CGPA of 9.2.`
     case 'achievements':
       return `CodeVita Season 12, global rank 7574. NEXUSVERSE Reverse Coding, second place. AINCAT 2025, rank 3567. I also have an MCP certification.`
     case 'articles':
@@ -108,7 +109,7 @@ export function fallbackAnswer(intent: Intent, query = '', activeId?: string | n
     case 'contact':
       return `You can reach me at ${portfolioData.contact.email}. I am ${portfolioData.contact.availability.toLowerCase()}.`
     default:
-      return `I can talk about a specific project, what I owned, or how it was built. Document Retrieval, Chatbots, the CDC Pipeline, the Semantic Layer, and the SEO Platform are the clearest places to start.`
+      return answerFromPassages(query, activeId)
   }
 }
 

@@ -1,10 +1,10 @@
 {
   "personal": {
     "name": "Uday Kumar Guduguntla",
-    "title": "AI Engineer | Python Backend & Agent Systems",
+    "title": "AI Engineer | GenAI & NLP | Python",
     "role": "Trainee Software Engineer – Python",
-    "tagline": "I build practical AI workflows: semantic context for agents, quality checks before publication, and automation that teams can actually operate.",
-    "description": "AI engineer and Python developer working on ontology, semantic layers, and conversational systems at Worktual, with prior backend work on a connected SEO content automation platform at Webfosys.",
+    "tagline": "I build retrieval, chatbots, and agent systems in Python, and I previously automated content publishing and review.",
+    "description": "AI engineer with 2+ years of Python experience, including 1+ year building generative AI and NLP: retrieval-augmented generation, chatbots, and multi-agent applications on a multi-tenant platform.",
     "email": "udayguduguntla@gmail.com",
     "phone": "+91 6302111386",
     "location": "Chennai, India",
@@ -18,35 +18,51 @@
     "codechef": "https://codechef.com/users/udayguduguntla"
   },
   "skills": {
-    "AI & Agent Systems": [
+    "Programming": [
+      "Python",
+      "SQL"
+    ],
+    "GenAI & NLP": [
+      "Generative AI",
+      "NLP",
       "LLMs",
+      "spaCy",
+      "NLTK",
       "RAG",
       "Embeddings",
-      "Ontology",
-      "Semantic Layers",
-      "Agent Workflows",
-      "MCP"
+      "Agentic AI",
+      "Multi-agent systems",
+      "Prompt engineering",
+      "Context engineering",
+      "Tool calling",
+      "MCP",
+      "Synthetic data generation"
     ],
-    "Backend & Automation": [
-      "Python",
+    "Frameworks & APIs": [
+      "LangChain",
       "FastAPI",
+      "Pydantic",
       "REST APIs",
-      "WordPress REST API",
-      "CDC",
-      "Scheduling"
+      "WordPress REST API"
     ],
-    "Data & Graph": [
+    "Search & Data": [
+      "Chroma",
+      "FAISS",
+      "Pinecone",
+      "Meilisearch",
       "PostgreSQL",
+      "MySQL",
+      "Redis",
+      "ClickHouse",
       "Neo4j",
-      "Cypher",
-      "SQL",
-      "Vector search",
-      "Google Search Console API"
+      "Cypher"
     ],
-    "Product Integrations": [
-      "Meta messaging APIs",
-      "Multi-tenant data flows",
-      "Authentication"
+    "Tools & Streaming": [
+      "Git",
+      "Docker",
+      "Kafka",
+      "Debezium",
+      "Google Search Console API"
     ],
     "Interface": [
       "React",
@@ -62,28 +78,30 @@
       "period": "Oct 2025 – Present",
       "location": "Chennai, India",
       "current": true,
-      "ownership": "I built the Python CDC pipeline. Ontology design, the SQL Agent, ADK, and the chatbot product were collaborative.",
-      "description": "Python work across retrieval, multi-channel chat, graph synchronization, and the Cypher side of analytics agents.",
+      "ownership": "I architected the multi-tenant RAG system, the CDC pipeline, and the Cypher agent. Chatbots, the in-house agent framework, ticketing improvements, and synthetic data were collaborative.",
+      "description": "GenAI and NLP work on a multi-tenant platform spanning contact center, CRM, ticketing, and campaign products.",
       "highlights": [
-        "Built the Python CDC pipeline that routes product-data changes into tenant-specific knowledge graphs.",
-        "Developed the Cypher Agent for the semantic analytics platform. A colleague owned the SQL Agent.",
-        "Contributed to document retrieval, website and Meta chatbots, ticketing-agent skills, and a shared agent kit."
+        "Architected the multi-tenant RAG system, the PostgreSQL-to-Neo4j CDC pipeline, and the Cypher agent for cross-product analytics.",
+        "Delivered multi-channel chatbots that use business knowledge and tools to book appointments and raise tickets. That product work was shared with the team.",
+        "Collaborated on an in-house Python agent framework, ticketing-agent improvements, and synthetic data pipelines, including about 26,000 conversation samples."
       ],
       "technologies": [
         "Python",
         "LLMs",
+        "LangChain",
         "Neo4j",
         "Cypher",
         "PostgreSQL",
-        "RAG"
+        "RAG",
+        "Kafka"
       ],
       "clientAssignment": null
     },
     {
       "title": "Python Developer – Backend & Tools",
       "company": "Webfosys Networks",
-      "period": "Jun 2024 – Jul 2025",
-      "location": "Bengaluru, India · Remote",
+      "period": "Jun 2024 – Sep 2025",
+      "location": "Remote / Dubai, UAE",
       "current": false,
       "ownership": "Implemented the connected publishing, quality, and analytics workflow. Further history and retry features were planned.",
       "description": "Built Python backend tooling for a multi-site SEO content operation, from article checks through WordPress publication and search reporting.",
@@ -104,10 +122,10 @@
         "client": "ZenX",
         "period": "Jul 2025 – Sep 2025",
         "location": "Dubai, UAE · On-site",
-        "summary": "Client assignment through Webfosys on a cross-border digital payments application, including digital-asset payments and automated currency conversion.",
+        "summary": "Webfosys and ZenX partnered on a cross-border digital payments app. I helped define payment workflows and backend requirements. This was not a separate employer and not part of the SEO platform.",
         "highlights": [
-          "Explored Web3 and digital-asset payment flows",
-          "Worked on backend tooling around conversion and transaction workflows"
+          "Helped define payment workflows and backend requirements",
+          "Contributed through the Webfosys partnership, not as a ZenX employee"
         ]
       }
     }
@@ -118,12 +136,12 @@
       "organization": "CodeTantra",
       "period": "Feb 2025 – Jul 2025",
       "context": "College-linked internship",
-      "summary": "Taught Python through interactive and gamified sessions, adapting explanations to different learners and building confidence speaking with groups.",
+      "summary": "Trained 1,000+ students in Python, C, and data structures. Led trainer teams at SRM in Chennai, VEMU in Chittoor, and SSEPTP in Putaparthi, and covered classes when teammates were absent. Also ran a full-stack web workshop for 70+ students and led TechChroma, a national symposium.",
       "skills": [
         "Teaching",
-        "Facilitation",
+        "Python",
         "Public speaking",
-        "Adaptability"
+        "Team leadership"
       ]
     }
   ],
@@ -165,7 +183,7 @@
         },
         {
           "title": "DevFista Hackathon",
-          "description": "First place with an AI solution.",
+          "description": "First prize in the DevFista Hackathon, organized by Nexzera and SkillBridge.",
           "year": "2024",
           "result": "1st prize",
           "featured": false,
@@ -173,8 +191,8 @@
           "credentialUrl": ""
         },
         {
-          "title": "TechChroma",
-          "description": "First place for project development and presentation.",
+          "title": "TechChroma Code Change",
+          "description": "First prize in Code Change at TechChroma, a national-level technical symposium.",
           "year": "2024",
           "result": "1st prize",
           "featured": false,
@@ -183,9 +201,9 @@
         },
         {
           "title": "CVCORP",
-          "description": "Selected among the top 40 participants.",
+          "description": "Top 40 finalist among 4,000+ participants in the CVCORP Hackathon.",
           "year": "2024",
-          "result": "Top 40",
+          "result": "Top 40 of 4,000+",
           "featured": false,
           "postUrl": "https://lnkd.in/p/gzc38sn2",
           "credentialUrl": ""
@@ -205,10 +223,10 @@
       "category": "Campus",
       "items": [
         {
-          "title": "Web Development Event",
-          "description": "Hosted a web development event.",
-          "year": "",
-          "result": "Hosted",
+          "title": "Full-stack web workshop",
+          "description": "Ran a full-stack web workshop for 70+ students.",
+          "year": "2025",
+          "result": "70+ students",
           "featured": false,
           "postUrl": "https://lnkd.in/p/g57kpGgE",
           "credentialUrl": ""
@@ -221,15 +239,15 @@
       "degree": "Master of Computer Applications (MCA)",
       "institution": "Narayana Engineering College",
       "period": "2023 – 2025",
-      "description": "Focused on AI, machine learning, and software development.",
-      "cgpa": "9.0",
+      "description": "MCA at Narayana Engineering College, Nellore, with a CGPA of 8.8. Campus results include the CVCORP, DevFista, and TechChroma prizes.",
+      "cgpa": "8.8",
       "status": "completed"
     },
     {
-      "degree": "Bachelor of Science (B.Sc)",
-      "institution": "Vikrama Simhapuri University",
+      "degree": "B.Sc. Statistics",
+      "institution": "Vivekananda Degree College, Nellore",
       "period": "2020 – 2023",
-      "description": "Built the computer-science foundation used in later backend and AI work.",
+      "description": "Bachelor of Science in Statistics at Vivekananda Degree College, Nellore.",
       "cgpa": "9.2",
       "status": "completed"
     }
