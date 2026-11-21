@@ -7,12 +7,12 @@ import { hintResumeSkill } from './ResumeAssistant'
 export default function SkillsSection() {
   return (
     <section id="skills" className="relative z-10 bg-[#3e463c] py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 max-w-2xl">
+      <div className="page-shell">
+        <div className="reading-measure mb-10">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Capabilities</p>
           <h2 className="mt-3 font-serif text-4xl text-cream sm:text-5xl">Skills</h2>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {Object.entries(portfolioData.skills).map(([group, skills], index) => (
             <motion.article
               key={group}

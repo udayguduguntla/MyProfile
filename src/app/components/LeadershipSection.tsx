@@ -4,7 +4,7 @@ export default function LeadershipSection() {
   return (
     <>
       <section id="leadership" className="relative z-10 bg-cream/[0.05] py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="page-shell">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Leadership and campus activity</p>
           <h2 className="mt-3 font-serif text-4xl text-cream">Teaching that sharpened communication</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">

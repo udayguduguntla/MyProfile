@@ -5,6 +5,43 @@ const localOrHttp = z.string().refine((value) => value === '' || value.startsWit
 const assetPath = z.string().regex(/^\/[A-Za-z0-9_./-]+$/, 'Use a site path such as /images/example.jpg.')
 
 export const visualTypes = ['rag', 'conversation', 'graph', 'semantic', 'agent', 'data', 'automation', 'vision', 'ocr'] as const
+export const projectVisibilities = ['featured', 'supporting', 'module', 'personal'] as const
+export const mediaKinds = ['screenshot', 'diagram', 'image'] as const
+
+const boundedText = (min: number, max: number) => z.string().trim().min(min).max(max)
+
+export const caseStudySectionSchema = z.object({
+  title: boundedText(2, 80),
+  body: boundedText(12, 1500),
+})
+
+export const caseStudyOutcomeSchema = z.object({
+  title: boundedText(2, 80),
+  detail: boundedText(8, 500),
+})
+
+export const projectMediaSchema = z.object({
+  src: assetPath,
+  alt: boundedText(4, 180),
+  caption: z.string().trim().max(300),
+  kind: z.enum(mediaKinds),
+})
+
+export const caseStudySchema = z.object({
+  constraints: z.array(boundedText(2, 300)).max(12),
+  approach: z.array(caseStudySectionSchema).max(8),
+  outcomes: z.array(caseStudyOutcomeSchema).max(8),
+  learnings: z.array(boundedText(8, 500)).max(8),
+  gallery: z.array(projectMediaSchema).max(12),
+})
+
+export const emptyCaseStudy = (): z.infer<typeof caseStudySchema> => ({
+  constraints: [],
+  approach: [],
+  outcomes: [],
+  learnings: [],
+  gallery: [],
+})
 
 export const projectSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
@@ -37,9 +74,25 @@ export const projectSchema = z.object({
   isPublic: z.boolean(),
   featured: z.boolean(),
   status: z.string().min(2),
-  visibility: z.enum(['featured', 'supporting', 'module', 'personal']),
+  visibility: z.enum(projectVisibilities),
   visualType: z.enum(visualTypes),
   parentId: z.string().optional(),
+  caseStudy: caseStudySchema.optional(),
+})
+
+export const projectsSchema = z.array(projectSchema).min(1).superRefine((projects, context) => {
+  const ids = new Set(projects.map((project) => project.id))
+  projects.forEach((project, index) => {
+    if (project.visibility === 'module' && !project.parentId) {
+      context.addIssue({ code: 'custom', path: [index, 'parentId'], message: 'A module needs a parent project.' })
+    }
+    if (!project.parentId) return
+    if (project.parentId === project.id) {
+      context.addIssue({ code: 'custom', path: [index, 'parentId'], message: 'A project cannot be its own parent.' })
+    } else if (!ids.has(project.parentId)) {
+      context.addIssue({ code: 'custom', path: [index, 'parentId'], message: 'Choose an existing parent project.' })
+    }
+  })
 })
 
 const achievementItemSchema = z.object({
@@ -123,7 +176,7 @@ export const portfolioContentSchema = z.object({
 })
 
 export const siteContentSchema = portfolioContentSchema.extend({
-  projects: z.array(projectSchema).min(1),
+  projects: projectsSchema,
 })
 
 export type SiteContent = z.infer<typeof siteContentSchema>

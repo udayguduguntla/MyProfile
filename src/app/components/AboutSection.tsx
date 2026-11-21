@@ -9,7 +9,7 @@ export default function AboutSection() {
 
   return (
     <section id="experience" className="relative z-10 bg-sage/[0.08] py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="page-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Professional experience</p>
         <h2 className="mt-3 font-serif text-4xl text-cream sm:text-5xl">Where the work happened</h2>
         <div className="mt-8 flex gap-3 overflow-x-auto">

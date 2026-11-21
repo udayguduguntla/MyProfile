@@ -15,6 +15,46 @@
   --text-muted: #a5a79b;
 }
 
+.page-shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+}
+
+.reading-measure {
+  max-width: 44rem;
+}
+
+.wide-measure {
+  max-width: 56rem;
+}
+
+.fab-clearance {
+  padding-right: 6rem;
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    padding-inline: 1.5rem;
+  }
+
+  .fab-clearance {
+    padding-right: 7rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
+    padding-inline: 2rem;
+  }
+}
+
+.prose-copy {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
 section[id], article[id] {
   scroll-margin-top: 5.5rem;
 }

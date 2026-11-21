@@ -779,7 +779,7 @@ export default function AIPortfolioChat() {
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-cream/75">This is an AI representation of my portfolio. It answers from verified records, not as a live conversation with me.</p>
         </motion.div>
       ) : (
-        <div ref={threadRef} data-lenis-prevent className="mx-auto mt-4 w-full max-w-4xl flex-1 overflow-y-auto overscroll-contain pb-40 [overflow-anchor:none]">
+        <div ref={threadRef} data-lenis-prevent className="wide-measure mx-auto mt-4 w-full flex-1 overflow-y-auto overscroll-contain pb-40 [overflow-anchor:none]">
           <div>
           <button
             onClick={clearChat}
@@ -853,7 +853,7 @@ export default function AIPortfolioChat() {
         layout
         className={isChatting
           ? 'fixed inset-x-0 z-30 mx-auto flex w-full max-w-3xl flex-col px-4'
-          : 'mx-auto mt-6 flex w-full max-w-2xl flex-col px-4'}
+          : 'wide-measure mx-auto mt-6 flex w-full flex-col px-4'}
         style={isChatting ? { bottom: 'calc(1rem + env(safe-area-inset-bottom) + var(--keyboard-offset, 0px))' } : undefined}
       >
         {nudge && (

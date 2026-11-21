@@ -34,7 +34,7 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="relative z-10 py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="page-shell">
         <motion.div
           initial="hidden"
           whileInView="show"

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import SystemGlyph from '@/app/components/SystemGlyph'
-import { portfolioContentSchema, projectSchema, visualTypes, type SiteContent } from '@/lib/content-schema'
+import { emptyCaseStudy, portfolioContentSchema, projectsSchema, visualTypes, type SiteContent } from '@/lib/content-schema'
 
 type Profile = Omit<SiteContent, 'projects'>
 type Project = SiteContent['projects'][number]
@@ -44,6 +44,7 @@ function blankProject(index: number): Project {
     safeguards: '',
     planned: [],
     aliases: ['new'],
+    caseStudy: emptyCaseStudy(),
     github: '',
     readmeUrl: '',
     workingUrl: '',
@@ -158,6 +159,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
   const [selectedAchievement, setSelectedAchievement] = useState(0)
   const [selectedEducation, setSelectedEducation] = useState(0)
   const [selectedLeadership, setSelectedLeadership] = useState(0)
+  const [projectTab, setProjectTab] = useState<'Overview' | 'Story' | 'Structure' | 'Media' | 'Links'>('Overview')
   const [dirty, setDirty] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [status, setStatus] = useState('')
@@ -191,7 +193,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
 
   const issues = useMemo(() => {
     const profileCheck = portfolioContentSchema.safeParse(profile)
-    const projectCheck = projectSchema.array().safeParse(projects)
+    const projectCheck = projectsSchema.safeParse(projects)
     return [
       ...(profileCheck.success ? [] : profileCheck.error.issues),
       ...(projectCheck.success ? [] : projectCheck.error.issues),
@@ -348,12 +350,23 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
         )}
 
         {section === 'Projects' && project && (
-          <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
-            <fieldset className={panel}>
+          <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_20rem]">
+            <fieldset className={`${panel} min-w-0`}>
               <legend className="font-serif text-3xl">{project.shortName}</legend>
-              {([
-                ['title', 'Title'], ['shortName', 'Short name'], ['problem', 'Problem'], ['contribution', 'Your contribution'],
-                ['ownershipLabel', 'Ownership label'], ['businessValue', 'Value'], ['chatDetail', 'Chat detail'],
+              <div className="flex flex-wrap gap-2">{(['Overview', 'Story', 'Structure', 'Media', 'Links'] as const).map((tab) => <button key={tab} type="button" onClick={() => setProjectTab(tab)} className={`rounded-full px-3 py-1 text-sm ${projectTab === tab ? 'bg-cream text-ink' : 'border border-white/15'}`}>{tab}</button>)}</div>
+              {projectTab === 'Overview' && <>
+              <label className="text-sm text-sage">Title<textarea className={field} value={project.title} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, title: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Short name<textarea className={field} value={project.shortName} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, shortName: event.target.value }; saveDraft(profile, next) }} /></label>
+              <p className="text-xs text-sage">Public URL: /projects/{project.id}</p>
+              <label className="text-sm text-sage">Category<input className={field} value={project.category} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, category: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Description<textarea className={field} value={project.description} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, description: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Visibility<select className={field} value={project.visibility} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, visibility: event.target.value as Project['visibility'], parentId: event.target.value === 'module' ? project.parentId : undefined }; saveDraft(profile, next) }}><option value="featured">Featured page</option><option value="supporting">Supporting page</option><option value="personal">Personal page</option><option value="module">Module, shown on its parent</option></select></label>
+              <label className="flex items-center gap-2 text-sm text-sage"><input type="checkbox" checked={project.featured} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, featured: event.target.checked }; saveDraft(profile, next) }} /> Featured</label>
+              <label className="flex items-center gap-2 text-sm text-sage"><input type="checkbox" checked={project.isPublic} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...project, isPublic: event.target.checked }; saveDraft(profile, next) }} /> Public repository</label>
+              </>}
+              {projectTab === 'Story' && ([
+                ['problem', 'Problem'], ['contribution', 'Your contribution'],
+                ['ownershipLabel', 'Ownership label'], ['businessValue', 'Value'], ['introFocus', 'Intro focus'], ['chatDetail', 'Chat detail'], ['safeguards', 'Public scope note'],
               ] as const).map(([key, label]) => (
                 <label key={key} className="text-sm text-sage">{label}
                   <textarea className={field} value={project[key]} onChange={(event) => {
@@ -363,7 +376,25 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                   }} />
                 </label>
               ))}
-              <label className="text-sm text-sage">Company
+              {projectTab === 'Story' && <label className="text-sm text-sage">Outcomes, one result per line as Title | detail<textarea className={`${field} min-h-24`} value={(project.caseStudy ?? emptyCaseStudy()).outcomes.map((item) => `${item.title} | ${item.detail}`).join('\n')} onChange={(event) => {
+                const outcomes = event.target.value.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => {
+                  const [title, ...rest] = line.split('|')
+                  return { title: title.trim(), detail: rest.join('|').trim() }
+                }).filter((item) => item.title.length > 0)
+                const next = clone(projects)
+                next[selectedProject] = { ...project, caseStudy: { ...(project.caseStudy ?? emptyCaseStudy()), outcomes } }
+                saveDraft(profile, next)
+              }} /></label>}
+              {projectTab === 'Story' && <label className="text-sm text-sage">Approach, one section per line as Title | body<textarea className={`${field} min-h-28`} value={(project.caseStudy ?? emptyCaseStudy()).approach.map((item) => `${item.title} | ${item.body}`).join('\n')} onChange={(event) => {
+                const approach = event.target.value.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => {
+                  const [title, ...rest] = line.split('|')
+                  return { title: title.trim(), body: rest.join('|').trim() }
+                }).filter((item) => item.title.length > 0)
+                const next = clone(projects)
+                next[selectedProject] = { ...project, caseStudy: { ...(project.caseStudy ?? emptyCaseStudy()), approach } }
+                saveDraft(profile, next)
+              }} /></label>}
+              {projectTab === 'Overview' && <><label className="text-sm text-sage">Company
                 <select className={field} value={project.company} onChange={(event) => {
                   const company = event.target.value as Project['company']
                   const next = clone(projects)
@@ -375,19 +406,36 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                   <option value="Personal">Personal</option>
                 </select>
               </label>
-              <label className="text-sm text-sage">Status<input className={field} value={project.status} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], status: event.target.value }; saveDraft(profile, next) }} /></label>
-              <label className="text-sm text-sage">GitHub link<input className={field} value={project.github} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], github: event.target.value }; saveDraft(profile, next) }} /></label>
-              <label className="text-sm text-sage">Technologies, comma separated<input className={field} value={project.technologies.join(', ')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Status<input className={field} value={project.status} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], status: event.target.value }; saveDraft(profile, next) }} /></label></>}
+              {projectTab === 'Links' && <><label className="text-sm text-sage">GitHub link<input className={field} value={project.github} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], github: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Readme URL<input className={field} value={project.readmeUrl} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], readmeUrl: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Demo URL<input className={field} value={project.workingUrl} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], workingUrl: event.target.value }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Parent project<select className={field} value={project.parentId ?? ''} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], parentId: event.target.value || undefined }; saveDraft(profile, next) }}><option value="">None</option>{projects.filter((item) => item.id !== project.id).map((item) => <option key={item.id} value={item.id}>{item.shortName}</option>)}</select></label></>}
+              {projectTab === 'Structure' && <><label className="text-sm text-sage">Technologies, one per line<textarea className={`${field} min-h-24`} value={project.technologies.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], technologies: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
               <label className="text-sm text-sage">Architecture, one step per line<textarea className={`${field} min-h-24`} value={project.architecture.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], architecture: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
               <label className="text-sm text-sage">Workflow, one step per line<textarea className={`${field} min-h-24`} value={project.workflow.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], workflow: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
-              <FilePick key={project.id} label="Project image" hint="Add a project image" accept="image/png,image/jpeg,image/webp,image/svg+xml" current={project.image} onFile={(file) => {
+              <label className="text-sm text-sage">Features, one per line<textarea className={`${field} min-h-24`} value={project.features.join('\n')} onChange={(event) => { const next = clone(projects); next[selectedProject] = { ...next[selectedProject], features: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Constraints, one per line<textarea className={`${field} min-h-24`} value={(project.caseStudy ?? emptyCaseStudy()).constraints.join('\n')} onChange={(event) => { const next = clone(projects); const study = project.caseStudy ?? emptyCaseStudy(); next[selectedProject] = { ...next[selectedProject], caseStudy: { ...study, constraints: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) } }; saveDraft(profile, next) }} /></label>
+              <label className="text-sm text-sage">Learnings, one per line<textarea className={`${field} min-h-24`} value={(project.caseStudy ?? emptyCaseStudy()).learnings.join('\n')} onChange={(event) => { const next = clone(projects); const study = project.caseStudy ?? emptyCaseStudy(); next[selectedProject] = { ...next[selectedProject], caseStudy: { ...study, learnings: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean) } }; saveDraft(profile, next) }} /></label></>}
+              {projectTab === 'Media' && <><FilePick key={project.id} label="Project image" hint="Add a project image" accept="image/png,image/jpeg,image/webp,image/svg+xml" current={project.image} onFile={(file) => {
                 void readAsset(file, 'public/images/projects').then(({ asset, publicPath }) => {
                   const next = clone(projects)
                   next[selectedProject] = { ...next[selectedProject], image: publicPath }
                   saveWithAsset(profile, next, asset)
                 })
               }} />
-              <label className="text-sm">Ownership
+              {(project.caseStudy ?? emptyCaseStudy()).gallery.map((item, index) => <p key={`${item.src}-${index}`} className="text-sm text-cream">{item.kind}: {item.alt}</p>)}
+              <FilePick key={`${project.id}-gallery`} label="Gallery image" hint="Add a screenshot or diagram" accept="image/png,image/jpeg,image/webp" onFile={(file) => {
+                const alt = window.prompt('Describe this image for screen readers.')?.trim()
+                if (!alt || alt.length < 4) return
+                void readAsset(file, 'public/images/projects').then(({ asset, publicPath }) => {
+                  const next = clone(projects)
+                  const study = project.caseStudy ?? emptyCaseStudy()
+                  next[selectedProject] = { ...next[selectedProject], caseStudy: { ...study, gallery: [...study.gallery, { src: publicPath, alt, caption: '', kind: 'screenshot' }] } }
+                  saveWithAsset(profile, next, asset)
+                })
+              }} /></>}
+              {projectTab === 'Links' && <><label className="text-sm">Ownership
                 <select className="mt-1 w-full rounded-xl border border-white/15 bg-[#2a0d0b] px-3 py-2 text-cream" value={project.ownership} onChange={(event) => {
                   const next = clone(projects)
                   next[selectedProject] = { ...next[selectedProject], ownership: event.target.value as Project['ownership'] }
@@ -413,7 +461,7 @@ export default function StudioEditor({ initialProfile, initialProjects }: { init
                   next[selectedProject] = { ...next[selectedProject], aliases: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) }
                   saveDraft(profile, next)
                 }} />
-              </label>
+              </label></>}
               <div className="flex flex-wrap gap-2 text-sm">
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, -1); saveDraft(profile, next); setSelectedProject(Math.max(0, selectedProject - 1)) }}>Move up</button>
                 <button type="button" onClick={() => { const next = move(projects, selectedProject, 1); saveDraft(profile, next); setSelectedProject(Math.min(projects.length - 1, selectedProject + 1)) }}>Move down</button>

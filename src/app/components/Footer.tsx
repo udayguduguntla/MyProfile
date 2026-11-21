@@ -17,7 +17,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-[#2a0d0b]/80">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 py-5 pl-4 pr-24 sm:pl-6 sm:pr-28 lg:flex-row lg:items-center lg:justify-between">
+      <div className="page-shell fab-clearance flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-sm font-semibold text-cream">{personal.name}</p>
           <p className="text-xs text-sage">{personal.title}</p>

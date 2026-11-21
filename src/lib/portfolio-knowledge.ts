@@ -1,6 +1,7 @@
 import { fallbackArticles } from '@/data/articles'
 import { portfolioData } from '@/data/portfolio'
 import { portfolioProjects } from '@/data/projects'
+import { projectCaseStudy } from '@/lib/project-presentation'
 
 export type Passage = {
   id: string
@@ -88,10 +89,17 @@ export function knowledgePassages(): Passage[] {
   }
 
   for (const project of portfolioProjects) {
+    const study = projectCaseStudy(project)
+    const extra = [
+      ...study.approach.map((section) => `${section.title}: ${section.body}`),
+      ...study.outcomes.map((item) => `${item.title}: ${item.detail}`),
+      ...study.constraints,
+      ...study.learnings,
+    ].join(' ')
     items.push(passage(
       `project-${project.id}`,
       project.shortName,
-      `${project.title} (${project.shortName}) at ${project.company}. ${project.introFocus} Problem: ${project.problem} Contribution: ${project.contribution} Ownership: ${project.ownershipLabel}. Value: ${project.businessValue} Architecture: ${project.architecture.join('; ')}. Technologies: ${project.technologies.join(', ')}. ${project.chatDetail} ${project.safeguards}`.trim(),
+      `${project.title} (${project.shortName}) at ${project.company}. ${project.introFocus} Problem: ${project.problem} Contribution: ${project.contribution} Ownership: ${project.ownershipLabel}. Value: ${project.businessValue} Architecture: ${project.architecture.join('; ')}. Technologies: ${project.technologies.join(', ')}. ${project.chatDetail} ${project.safeguards} ${extra}`.trim(),
       [project.id, project.shortName, project.title, ...project.aliases, project.company],
     ))
   }

@@ -1,5 +1,6 @@
 import { portfolioData } from '@/data/portfolio'
 import { indexableProjects, projectPath, type PortfolioProject } from '@/data/projects'
+import { projectCaseStudy } from '@/lib/project-presentation'
 import { absoluteUrl, siteConfig } from '@/lib/site-config'
 
 function sameAs() {
@@ -56,6 +57,7 @@ export function projectGraph(project: PortfolioProject) {
     url: absoluteUrl(projectPath(project.id)),
     creator: { '@id': absoluteUrl('/#person') },
     about: project.technologies,
+    image: [absoluteUrl(project.image), ...projectCaseStudy(project).gallery.map((item) => absoluteUrl(item.src))],
     isPartOf: { '@id': absoluteUrl('/#website') },
   }
 }

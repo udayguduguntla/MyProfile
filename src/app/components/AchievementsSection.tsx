@@ -11,10 +11,10 @@ export default function AchievementsSection() {
 
   return (
     <section id="achievements" className="relative z-10 py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="page-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Credentials</p>
         <h2 className="mt-3 font-serif text-4xl text-cream">Competitions and certification</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => {
             const certificateUrl = item.credentialUrl.endsWith('.pdf') ? item.credentialUrl : ''
             return (

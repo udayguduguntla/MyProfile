@@ -305,7 +305,7 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" className="relative z-10 overflow-x-clip py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="page-shell">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Selected work</p>
         <h2 className="mt-3 font-serif text-4xl text-cream sm:text-5xl">Worktual, Webfosys, and self projects</h2>
         {callout === 'show' && (
@@ -314,7 +314,7 @@ export default function ProjectsSection() {
             <button type="button" onClick={hideCallout} className="rounded-full border border-cream/40 px-3 py-1 text-cream">Dismiss</button>
           </div>
         )}
-        <div className="mt-8 grid items-start gap-6 lg:grid-cols-[220px_1fr]">
+        <div className="mt-8 grid items-start gap-6 xl:grid-cols-[12rem_minmax(0,1fr)]">
           <div className="hidden lg:block">
             <SystemIndex groups={groups} activeId={active.id} onSelect={setActive} />
           </div>

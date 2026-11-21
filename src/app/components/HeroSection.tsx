@@ -13,7 +13,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative z-10 px-4 pb-16 pt-28 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.3fr_0.7fr]">
+      <div className="page-shell grid items-center gap-10 lg:grid-cols-[1.3fr_0.7fr]">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-sage">AI Engineer</p>
           <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-tight text-cream sm:text-6xl">{portfolioData.personal.name}</h1>

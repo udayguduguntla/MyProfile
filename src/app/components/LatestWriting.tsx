@@ -30,7 +30,7 @@ export default function LatestWriting({ compact = false }: { compact?: boolean }
 
   return (
     <section id="writing" className={compact ? '' : 'relative z-10 py-20'}>
-      <div className={compact ? '' : 'mx-auto max-w-6xl px-4 sm:px-6 lg:px-8'}>
+      <div className={compact ? '' : 'page-shell'}>
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">Latest writing</p>
         <div className={`mt-4 grid gap-3 ${compact ? '' : 'sm:grid-cols-3'}`}>
           {articles.map((article) => (
