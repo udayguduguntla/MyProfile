@@ -23,7 +23,8 @@ import {
 } from 'lucide-react'
 import { portfolioData, Project } from '@/data/portfolio'
 import { detectIntent, fallbackAnswer, projectIntroduction, projectPrompts, type Intent } from '@/lib/portfolio-chat'
-import { projectById } from '@/data/projects'
+import { projectById, projectPath } from '@/data/projects'
+import { trackEvent } from '@/lib/analytics'
 import SystemGlyph from './SystemGlyph'
 import LatestWriting from './LatestWriting'
 import InteractiveStarBackground from './InteractiveStarBackground'
@@ -614,6 +615,7 @@ export default function AIPortfolioChat() {
   const submitQuery = useCallback(async (prompt = query, forcedIntent?: Intent, projectId = activeProjectId) => {
     const cleanPrompt = prompt.trim()
     if (!cleanPrompt || isTyping) return
+    trackEvent('chat_message')
 
     const fallbackIntent = forcedIntent ?? detectIntent(cleanPrompt)
     setQuery('')
@@ -772,7 +774,7 @@ export default function AIPortfolioChat() {
           transition={{ type: 'spring', stiffness: 160, damping: 22 }}
           className="mx-auto flex w-full max-w-5xl flex-col items-center px-2 py-10 text-center sm:py-16"
         >
-          <h1 className="font-serif text-5xl leading-none text-cream sm:text-7xl">I&apos;m Uday Guduguntla</h1>
+          <p className="font-serif text-5xl leading-none text-cream sm:text-7xl">I&apos;m Uday Guduguntla</p>
           <p className="mt-4 text-sm uppercase tracking-[0.2em] text-sage">AI Engineer</p>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-cream/75">This is an AI representation of my portfolio. It answers from verified records, not as a live conversation with me.</p>
         </motion.div>
@@ -924,6 +926,11 @@ export default function AIPortfolioChat() {
                 ))}
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
+                {selectedProject.visibility !== 'module' && (
+                  <a href={projectPath(selectedProject.id)} onClick={() => trackEvent('project_open', { project_id: selectedProject.id })} className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-cream">
+                    Project page
+                  </a>
+                )}
                 {selectedProject.github.startsWith('http') && (
                 <a href={selectedProject.github} target="_blank" rel="noreferrer" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink">
                   GitHub

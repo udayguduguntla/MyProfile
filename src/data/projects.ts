@@ -10,3 +10,11 @@ export const portfolioProjects: PortfolioProject[] = projectSchema.array().parse
 export function projectById(id?: string | null) {
   return portfolioProjects.find((project) => project.id === id)
 }
+
+export function indexableProjects() {
+  return portfolioProjects.filter((project) => project.visibility !== 'module')
+}
+
+export function projectPath(id: string) {
+  return `/projects/${id}`
+}

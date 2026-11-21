@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
-import SmoothScroll from './components/SmoothScroll'
-import ScrollProgress from './components/ScrollProgress'
 import HashLinks from './components/HashLinks'
+import JsonLd from './components/JsonLd'
+import ScrollProgress from './components/ScrollProgress'
+import SiteAnalytics from './components/SiteAnalytics'
+import SmoothScroll from './components/SmoothScroll'
+import { siteGraph } from '@/lib/structured-data'
+import { absoluteUrl, siteConfig } from '@/lib/site-config'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,28 +23,29 @@ const instrumentSerif = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
-  title: 'Uday Kumar Guduguntla | AI Engineer',
-  description: 'AI engineer portfolio covering ontology, semantic layers, conversational systems, and Python automation.',
-  keywords: 'AI Engineer, NLP Developer, Python Engineer, RAG, Multi-Agent Systems, Next.js, FastAPI',
-  authors: [{ name: 'Uday Kumar Guduguntla' }],
-  creator: 'Uday Kumar Guduguntla',
-  verification: {
-    google: 'OkEMApdkUk61DIdra9BpjxEbrxyUirzbBShDre_iHeo',
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
   },
+  description: siteConfig.description,
+  keywords: ['AI Engineer', 'NLP Developer', 'Python Engineer', 'RAG', 'Multi-Agent Systems', 'Next.js', 'FastAPI'],
+  authors: [{ name: siteConfig.name, url: absoluteUrl('/') }],
+  creator: siteConfig.name,
+  alternates: { canonical: '/' },
+  verification: { google: siteConfig.googleVerification },
   openGraph: {
-    title: 'Uday Kumar Guduguntla | AI Engineer',
-    description: 'AI engineer portfolio covering ontology, semantic layers, conversational systems, and Python automation.',
-    url: 'https://udayguduguntla.com',
-    siteName: 'Uday Kumar Portfolio',
-    images: [{ url: '/images/profilePic.jpg', width: 460, height: 460, alt: 'Uday Kumar Guduguntla' }],
-    locale: 'en_US',
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: absoluteUrl('/'),
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Uday Kumar Guduguntla | AI Engineer',
-    description: 'AI engineer portfolio covering ontology, semantic layers, conversational systems, and Python automation.',
-    images: ['/images/profilePic.jpg'],
+    title: siteConfig.title,
+    description: siteConfig.description,
   },
   robots: {
     index: true,
@@ -69,6 +74,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
       <body className={`${inter.className} ${instrumentSerif.variable}`}>
+        <JsonLd data={siteGraph()} />
         <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-cream focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
         <SmoothScroll>
           <HashLinks />
@@ -77,6 +83,7 @@ export default function RootLayout({
             {children}
           </main>
         </SmoothScroll>
+        <SiteAnalytics />
       </body>
     </html>
   )

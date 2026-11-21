@@ -5,6 +5,8 @@ import { createPortal } from 'react-dom'
 import { useLenis } from 'lenis/react'
 import { motion, useReducedMotion } from 'motion/react'
 import { hasPublicUrl, portfolioData, type Project } from '@/data/portfolio'
+import { projectPath } from '@/data/projects'
+import { trackEvent } from '@/lib/analytics'
 import { setResumeModalProject } from './ResumeAssistant'
 import SystemGlyph from './SystemGlyph'
 
@@ -246,6 +248,13 @@ function SystemStack({
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-sage">{active.technologies.join(' · ')}</p>
+            <a
+              href={projectPath(active.id)}
+              onClick={() => trackEvent('project_open', { project_id: active.id })}
+              className="rounded-full border border-cream/30 px-4 py-2 text-sm text-cream"
+            >
+              Project page
+            </a>
             <button
               type="button"
               onClick={() => {
@@ -253,6 +262,7 @@ function SystemStack({
                   swiped.current = false
                   return
                 }
+                trackEvent('project_open', { project_id: active.id })
                 onOpen(active)
               }}
               className="rounded-full bg-cream px-4 py-2 text-sm font-semibold text-ink"

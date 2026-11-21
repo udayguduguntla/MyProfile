@@ -1,4 +1,7 @@
+'use client'
+
 import { portfolioData } from '@/data/portfolio'
+import { trackEvent } from '@/lib/analytics'
 
 const sections = [
   ['Experience', '#experience'],
@@ -21,9 +24,9 @@ export default function Footer() {
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-cream/80">
           <a href={`mailto:${contact.email}`}>Email</a>
-          <a href={social.github} target="_blank" rel="noreferrer">GitHub</a>
-          <a href={social.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href={personal.resume}>Resume</a>
+          <a href={social.github} target="_blank" rel="noreferrer" onClick={() => trackEvent('outbound_click', { destination: 'github' })}>GitHub</a>
+          <a href={social.linkedin} target="_blank" rel="noreferrer" onClick={() => trackEvent('outbound_click', { destination: 'linkedin' })}>LinkedIn</a>
+          <a href={personal.resume} onClick={() => trackEvent('resume_download')}>Resume</a>
           {sections.map(([label, href]) => (
             <a key={href} href={href}>{label}</a>
           ))}

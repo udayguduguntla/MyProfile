@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { portfolioData } from '@/data/portfolio'
+import { trackEvent } from '@/lib/analytics'
 
 const specialties = ['Ontology', 'Semantic layers', 'LLM workflows', 'Python automation']
 
@@ -26,7 +27,7 @@ export default function HeroSection() {
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#projects" className="rounded-full bg-burgundy px-5 py-3 text-sm font-semibold text-cream">View case studies</a>
             <a href="#contact" className="rounded-full border border-cream/30 px-5 py-3 text-sm font-semibold text-cream">Contact</a>
-            <a href={portfolioData.personal.resume} className="rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink">Resume PDF</a>
+            <a href={portfolioData.personal.resume} onClick={() => trackEvent('resume_download')} className="rounded-full bg-cream px-5 py-3 text-sm font-semibold text-ink">Resume PDF</a>
           </div>
         </div>
         <div className="rounded-[2rem] border border-cream/20 bg-cream/[0.07] p-6 backdrop-blur-xl">
