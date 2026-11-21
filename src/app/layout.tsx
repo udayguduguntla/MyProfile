@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   keywords: 'AI Engineer, NLP Developer, Python Engineer, RAG, Multi-Agent Systems, Next.js, FastAPI',
   authors: [{ name: 'Uday Kumar Guduguntla' }],
   creator: 'Uday Kumar Guduguntla',
+  verification: {
+    google: 'OkEMApdkUk61DIdra9BpjxEbrxyUirzbBShDre_iHeo',
+  },
   openGraph: {
     title: 'Uday Kumar Guduguntla | AI Engineer',
     description: 'AI engineer portfolio covering ontology, semantic layers, conversational systems, and Python automation.',

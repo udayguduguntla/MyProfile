@@ -49,3 +49,5 @@ next-env.d.ts
 # Temporary files
 *.tmp
 *.temp
+/tmp/
+dev.log
